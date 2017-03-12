@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-Copyleft (c) 2016 Cocobug All Rights Reserved.
+# Copyleft (c) 2016 Cocobug All Rights Reserved.
 
 import argparse
 
