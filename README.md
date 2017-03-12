@@ -1,2 +1,2 @@
-# crocoweb
+# vkyweb
 General web generator

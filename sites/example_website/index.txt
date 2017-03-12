@@ -1,0 +1,40 @@
+title_en: Transaltionus
+title_fr: Traductionnator
+author_en: Maximilian
+author_fr: Maximilien
+
+articles_en: List of articles
+articles_fr: Liste des articles
+
+category_en: List of categories
+category_fr: Liste des catégories
+
+legal_*: Copyleft (c) Cocobug
+
+__en__
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+__/en__
+
+__fr__
+Loreme ipsume dolore site amete, consecteture adipisicinge elite, sede doe eiusmode tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolore ine reprehenderite ine voluptate velite esse cillume dolore eu fugiatte nulla pariature. Excepteure sinte occaecate cupidatate none proidente, sunta ine culpa qui officia deserunte mollite anime ide est laborume.
+__/fr__
+
+__*__
+![Alt text](/path/to/img.jpg)
+__/*__
+
+__hidden__
+Hiden text, can be used in many ways. Note that hidden is not a reserved keyword and is just treated separately in the generation process.
+__/hidden__
+
+__useless__
+The useless keyword is not reserved either, and since it wont be treated in the generation process, it will just be lost
+__/useless__
+
+__error__
+If you don't close properly something __a lot of content will be lost
+__in the generation
+process
+__*__
+Like this
+__/*__

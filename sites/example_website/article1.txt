@@ -1,0 +1,14 @@
+title_fr: Premier article
+title_en: First article
+author_*: Max
+
+date: 10/10/10
+
+__fr__
+Contenu
+__/fr__
+__en__
+Content
+__/en__
+
+Lorem pict.

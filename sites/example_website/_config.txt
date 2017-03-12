@@ -1,0 +1,7 @@
+variable_that_will_be_accesible_in_the_whole_project: Very good
+en_en: English
+en_fr: Anglais
+fr_fr: Français
+fr_en: French
+model: dual
+generation: dynamic
