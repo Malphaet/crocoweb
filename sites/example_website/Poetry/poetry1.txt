@@ -1,6 +1,8 @@
 title_*: Rose
 author_*: Max
 
+----
+
 __en__
 A Rose flew
 Flower of beauty

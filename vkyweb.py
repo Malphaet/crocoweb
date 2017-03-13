@@ -3,6 +3,7 @@
 # Copyleft (c) 2016 Cocobug All Rights Reserved.
 
 import argparse
+from generator import *
 
 parser = argparse.ArgumentParser(description='Website on-the-fly & static generator')
 subparsers = parser.add_subparsers(help='Commands')

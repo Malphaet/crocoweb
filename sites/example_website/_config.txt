@@ -1,7 +1,12 @@
-variable_that_will_be_accesible_in_the_whole_project: Very good
+variablethatwillbeaccesibleinthewholeproject: Very good
 en_en: English
 en_fr: Anglais
 fr_fr: Français
 fr_en: French
 model: dual
 generation: dynamic
+
+----
+
+Be wary that _ is a reserved character
+Technically those lines are not comments but since the text content of config files is ignored, it acts like one

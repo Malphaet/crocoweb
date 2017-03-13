@@ -4,6 +4,8 @@ author_*: Max
 
 date: 10/10/10
 
+----
+
 __fr__
 Contenu
 __/fr__
