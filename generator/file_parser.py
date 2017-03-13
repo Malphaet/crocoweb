@@ -24,18 +24,28 @@ class WebPage(object):
         for key in self.reserved:
             setattr(self,key,"")
 
-    def set_reserved(self,var):
-        setattr(self,self.reserved_prefix+key,"")
+    def set_reserved(self,var,value=""):
+        setattr(self,self.reserved_prefix+key,value)
 
     def get_reserved(self,var):
-        getattr(self,var)
+        getattr(self,self.reserved_prefix+var)
 
     def add_content(self,text,lang):
         self.content.append([text,lang])
 
-    def get_next_line(self,lang="*"):
+    def get_next_line(self,filter_lang="*"):
         "Get a line of text, with a filter if needed"
-        pass
+        for line,lang in self.content:
+            if filter_lang in lang:
+                yield line
+
+    def get_text(self,filter):
+        "Get the whole text matching the filter, note that the * filter will ONLY match if the text is meant for all, not all text"
+        text=""
+        for line in self.get_next_line(filter):
+            text+=line
+            text+=os.linesep
+        return text
 
     def get_lang(self,lang):
         "Will make sense if I ever use a translation table and not a clusterf*ck of strings"
@@ -78,14 +88,16 @@ def parse_file(file_name):
                 if line!=os.linesep: # Now parsing config files
                     var,value=re_config_line.match(line).groups()
                     page.add_variable(var,value)
+
+            used_langs={} # Keep trace of all used langs and opened/closed matchs
             while True: # The config lines are now parsed, will now enter the nightmare of standart lines
                 line=f.readline()
                 if not line: # Wait for the last line
                     break
                 match=re_text_line.match(line)  #Will always match since there is a .* in the regex
                 beg_lang,end_lang,text=match.groups()
-                used_langs={}
                 page_text=[]
+
                 if beg_lang: #Will now add a lang to witch the programe should write
                     if beg_lang in used_langs:
                         used_langs[beg_lang]+=1
@@ -97,12 +109,12 @@ def parse_file(file_name):
                     else:
                         used_langs[end_lang]=0 # This should never happen, but...users
                 elif text:
-                    line_langs=[]
-                    for l in used_langs:
+                    line_langs=[] # Langs used in the current line
+                    for l in used_langs: #
                         if used_langs[l]>0:
                             line_langs.append(l)
-                    if len(used_langs)==0: # If no langs are used, print in every lang
-                        used_langs=["*"]
+                    if len(line_langs)==0: # If no langs are used, print in every lang (standart behavior)
+                        line_langs=["*"]
                     page.add_content(text,line_langs)
 
         except re.error:
@@ -113,9 +125,17 @@ def parse_file(file_name):
     return page
 
 re_config_line=re.compile("(?P<variable>.+): (?P<value>.*)")
-re_text_line=re.compile("__(?P<beg_lang>\w+)__|__/(?P<end_lang>\w+)__|(?P<text>.*)")
+re_text_line=re.compile("__(?P<beg_lang>[\*\w]+)__|__/(?P<end_lang>[\*\w]+)__|(?P<text>.*)")
 
 if __name__ == '__main__':
-    page=parse_file("sites/example_website/_config.txt")
-    print page.variables
-    print page.list_of_lang
+    config=parse_file("sites/example_website/_config.txt")
+    index=parse_file("sites/example_website/index.txt")
+
+    #print config.variables
+    #print config.list_of_lang
+    #print config.content
+    #for l in config.get_next_line("*"):
+    #    print l
+    #print index.content
+    #print index.get_text("*")
+    #print index.get_text("fr")
