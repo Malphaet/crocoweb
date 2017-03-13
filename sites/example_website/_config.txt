@@ -10,3 +10,7 @@ generation: dynamic
 
 Be wary that _ is a reserved character
 Technically those lines are not comments but since the text content of config files is ignored, it acts like one
+
+__en__
+
+__/en__
