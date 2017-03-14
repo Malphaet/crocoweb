@@ -25,19 +25,29 @@ class WebPage(object):
             setattr(self,key,"")
 
     def set_reserved(self,var,value=""):
+        "Set a reserved variable"
         setattr(self,self.reserved_prefix+key,value)
 
     def get_reserved(self,var):
+        "Get a reserved variable"
         getattr(self,self.reserved_prefix+var)
 
     def add_content(self,text,lang):
+        "Add a line of content, with the appropriates langues"
         self.content.append([text,lang])
 
     def get_next_line(self,filter_lang="*"):
         "Get a line of text, with a filter if needed"
         for line,lang in self.content:
-            if filter_lang in lang:
+            if self.match_with_lang(lang,filter_lang):
                 yield line
+
+    def match_with_lang(self,lang,filter_lang):
+        """Will make sense if I ever use a translation table and not a clusterf*ck of strings"""
+        for l in lang:
+            if l=="*" or l==filter_lang:
+                return 1
+        return 0
 
     def get_text(self,filter):
         "Get the whole text matching the filter, note that the * filter will ONLY match if the text is meant for all, not all text"
@@ -46,10 +56,6 @@ class WebPage(object):
             text+=line
             text+=os.linesep
         return text
-
-    def get_lang(self,lang):
-        "Will make sense if I ever use a translation table and not a clusterf*ck of strings"
-        return lang
 
     def add_variable(self,var,value):
         """Add the folowing variable and update the necessary constants
@@ -64,6 +70,17 @@ class WebPage(object):
                 self.variables[var]={lang:value}
             self.list_of_lang.add(lang)
 
+    def get_variable(self,varname,filter_lang="*"):
+        "Get a variable, if * or nothing is used a filter the program will attempt to give a global variable, or will yield one at random"
+        if varname in self.reserved:
+            return getattr(self,varname)
+        if varname in self.variable:
+            if filter_lang in self.variable[varname]:
+                return self.variable[varname][filter_lang]
+            else:
+                if filter_lang=="*":
+                    return self.variable[varname].items()[0]
+                raise KeyError("The variable "+varname+" doens't exist in te language "+filter_lang)
 
 def create_lang(var,value):
     """Takes a variable (with an eventual language tag) and it's value and return var,lang,value
@@ -137,5 +154,9 @@ if __name__ == '__main__':
     #for l in config.get_next_line("*"):
     #    print l
     #print index.content
-    #print index.get_text("*")
-    #print index.get_text("fr")
+    print "All text only"
+    print index.get_text("*")
+    print "Fr text only"
+    print index.get_text("fr")
+    print "En text only"
+    print index.get_text("en")
