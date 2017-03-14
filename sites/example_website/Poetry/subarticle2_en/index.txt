@@ -1,0 +1,13 @@
+title_fr: Ferugination
+title_en: Ferogo
+category_*: Malo
+author_*: Max
+
+----
+
+__en__
+I aim to misbehave
+__/en__
+__fr__
+Huehuehue
+__/fr__

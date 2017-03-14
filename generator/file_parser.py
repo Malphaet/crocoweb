@@ -60,14 +60,11 @@ class WebPage(object):
     def add_variable(self,var,value):
         """Add the folowing variable and update the necessary constants
         Takes a variable (with an eventual langague tag) and it's value"""
-        var,lang,value=create_lang(var,value)
+        var,lang=create_lang(var)
         if var in self.reserved:
             setattr(self,var,value)
         else:
-            if var in self.variables:
-                self.variables[var][lang]=value
-            else:
-                self.variables[var]={lang:value}
+            add_to_table(var,lang,value,self.variables)
             self.list_of_lang.add(lang)
 
     def get_variable(self,varname,filter_lang="*"):
@@ -82,13 +79,31 @@ class WebPage(object):
                     return self.variable[varname].items()[0]
                 raise KeyError("The variable "+varname+" doens't exist in te language "+filter_lang)
 
-def create_lang(var,value):
+    def export(self):
+        "Export the Webobject in every language"
+        exp={}
+        for lang in self.langagues:
+            exp[lang]=self.get_text(lang)
+        return exp
+
+def add_to_table(var,lang,value,table):
+    "For now it works in tandem with create_lang and add to a dict with the lang"
+    if var in table:
+        table[var][lang]=value
+    else:
+        table[var]={lang:value}
+    return table
+
+def create_lang(var):
     """Takes a variable (with an eventual language tag) and it's value and return var,lang,value
     Only the last _ determines the language, note that it could give the impression _ is ok to use in variables. It is not."""
-    var=var.rsplit('_',1)
-    if len(var)==2:
-        return var[0],var[1],value
-    return var[0],"*",value
+    s_var=var.rsplit('_',1)
+
+    if len(s_var)==2:
+        if "" in s_var:
+            return var,"*"
+        return s_var[0],s_var[1]
+    return var ,"*"
 
 def parse_file(file_name):
     "Parse a file and return a webpage object"
