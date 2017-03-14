@@ -82,7 +82,7 @@ class WebPage(object):
     def export(self):
         "Export the Webobject in every language"
         exp={}
-        for lang in self.langagues:
+        for lang in self.list_of_lang:
             exp[lang]=self.get_text(lang)
         return exp
 

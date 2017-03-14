@@ -111,6 +111,9 @@ class WebNode(WebSubTree):
         self.path=path
         self.full_path=os.path.join(website_path,path)
         self.content={}
+        self.name,self.type=os.path.splitext(self.path)
+        if self.type==".txt":
+            self.open_node()
 
     def get_variable(self,varname,filter_lang):
         "Get the corresponding variable, first in the Webnode, then the config and repeating up until the Root"
@@ -126,7 +129,9 @@ class WebNode(WebSubTree):
         "Open the file in the node, for now the parse is left linked, but later versions will ditch it asap"
         self.parse=file_parser.parse_file(self.full_path)
         self.variables=self.parse.variables
-        print self.parse.export()
+        self.languages=self.parse.export()
+        
+
 def makeWebsite(website):
     "Take a string of the folder name containing the website, will proceed to generate all needed Objects and return the Webtree"
     if os.path.isdir(website):
