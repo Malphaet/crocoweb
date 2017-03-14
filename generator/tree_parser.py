@@ -92,13 +92,26 @@ class WebSubTree(WebTree):
 
     def get_node(self,name,filter_lang=""):
         "Get a node with a specific name"
-        pass
+        if name in self.nodes:
+            if filter_lang!="": #No specific lang, so all langs are returned, should disapear soon I think
+                return self.nodes
+            if filter_lang in self.nodes[name]:
+                return self.nodes[filter_lang]
+            return self.nodes["*"] # specific language unavailable, all languages returned, better luck here
+        raise IndexError("The node "+name+" doesn't exist")
+
+    def get_content(self,name,filter_lang=""):
+        "Get the content of the node in the specified language"
+        return get_node(name,filter_lang).get_content(filter_lang)
 
     def print_webtree(self,prefix=""):
         "Print the tree and recuse"
         for item,langs in self.nodes.iteritems():
             for lang,node in langs.iteritems():
                 print "{} [{}] {}".format(prefix,lang,node)
+                print "-----------"
+                print node.get_content("en")
+
         for item,langs in self.subtree.iteritems():
             for lang,node in langs.iteritems():
                 print "{} [{}] {}".format(prefix,lang,node)
@@ -129,8 +142,15 @@ class WebNode(WebSubTree):
         "Open the file in the node, for now the parse is left linked, but later versions will ditch it asap"
         self.parse=file_parser.parse_file(self.full_path)
         self.variables=self.parse.variables
-        self.languages=self.parse.export()
-        
+        self.content=self.parse.export()
+        self.list_of_lang=self.parse.list_of_lang
+
+    def get_content(self,filter_lang):
+        """Output the content of the node, in the correct language
+        (note that you shouldn't ask directly a node for it's content, rather a Subtree for a node in the correct language)"""
+        if filter_lang in self.content:
+            return self.content[filter_lang]
+        return self.content["*"]
 
 def makeWebsite(website):
     "Take a string of the folder name containing the website, will proceed to generate all needed Objects and return the Webtree"
