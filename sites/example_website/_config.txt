@@ -5,7 +5,12 @@ fr_fr: Français
 fr_en: French
 model: dual
 generation: dynamic
-
+articles_en: Articles
+articles_fr: Articles
+previous_en: Previous articles
+previous_fr: Articles précédents
+about_en: About me
+about_fr: A propos
 ----
 
 Be wary that _ is a reserved character
@@ -14,3 +19,7 @@ Technically those lines are not comments but since the text content of config fi
 __en__
 
 __/en__
+
+__comment__
+You can also comment anywhere by using any __lang__ not in the scope of generated ones
+__/comment__
