@@ -30,7 +30,7 @@ class WebPage(object):
 
     def get_reserved(self,var):
         "Get a reserved variable"
-        getattr(self,self.reserved_prefix+var)
+        return getattr(self,self.reserved_prefix+var)
 
     def add_content(self,text,lang):
         "Add a line of content, with the appropriates langues"
@@ -69,15 +69,16 @@ class WebPage(object):
 
     def get_variable(self,varname,filter_lang="*"):
         "Get a variable, if * or nothing is used a filter the program will attempt to give a global variable, or will yield one at random"
-        if varname in self.reserved:
-            return getattr(self,varname)
-        if varname in self.variable:
-            if filter_lang in self.variable[varname]:
-                return self.variable[varname][filter_lang]
+        #print "Getting",varname,filter_lang,"in",self.variables
+        #if varname in self.reserved:
+        #    return getattr(self,varname)
+        if varname in self.variables:
+            if filter_lang in self.variables[varname]:
+                return self.variables[varname][filter_lang]
             else:
                 if filter_lang=="*":
-                    return self.variable[varname].items()[0]
-                raise KeyError("The variable "+varname+" doens't exist in te language "+filter_lang)
+                    return self.variables[varname].values()[0]
+                raise KeyError("The variable "+varname+" doens't exist in the language "+filter_lang)
 
     def export(self):
         "Export the Webobject in every language"

@@ -14,6 +14,6 @@ subparsers = parser.add_subparsers(help='Commands')
 #parser_a.add_argument('bar', type=int, help='bar help')
 
 s=tree_parser.makeWebsite("sites/example_website")
-container=model.DualContainer()
+container=model.makeContainer(s)
 
 s.print_webtree(" > ")

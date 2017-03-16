@@ -25,7 +25,7 @@ class WebTree(object):
 
     def get_variable(self,varname,filter_lang="*"):
         "Get the corresponding variable"
-        self.config_file.get_variable(varname,filter_lang)
+        return self.config_file.get_variable(varname,filter_lang)
 
     def convert_local(self,files):
         pass
@@ -56,9 +56,9 @@ class WebSubTree(WebTree):
     def get_variable(self,varname,filter_lang):
         "Get the variable, either in it's config or one of the above"
         try:
-            self.config_file.get_variable(varname,filter_lang)
+            return self.config_file.get_variable(varname,filter_lang)
         except:
-            self.parent_node.get_variable(varname,filter_lang)
+            return self.parent_node.get_variable(varname,filter_lang)
 
     def get_config(self):
         "Try to init a config, if not just use an empty variable set"
@@ -131,12 +131,12 @@ class WebNode(WebSubTree):
     def get_variable(self,varname,filter_lang):
         "Get the corresponding variable, first in the Webnode, then the config and repeating up until the Root"
         try:
-            self.file.get_variable(varname,filter_lang)
+            return self.config_file.get_variable(varname,filter_lang)
         except:
             try:
-                self.config_file.get_variable(varname,filter_lang)
+                return self.config_file.get_variable(varname,filter_lang)
             except:
-                self.parent_node.get_variable(varname,filter_lang)
+                return self.parent_node.get_variable(varname,filter_lang)
 
     def open_node(self):
         "Open the file in the node, for now the parse is left linked, but later versions will ditch it asap"

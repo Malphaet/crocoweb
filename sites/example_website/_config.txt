@@ -9,6 +9,8 @@ articles_en: Articles
 articles_fr: Articles
 previous_en: Previous articles
 previous_fr: Articles précédents
+preferences_en: Preferences
+preferences_fr: Préférences
 about_en: About me
 about_fr: A propos
 ----
