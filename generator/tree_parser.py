@@ -12,6 +12,21 @@ class WebTree(object):
         self.get_config()
         self.make_tree()
 
+    def get_title(self,filter_lang):
+        "Try to give the human-readable title of the node, default to the name"
+        try:
+            return self.get_variable("title",filter_lang)
+        except:
+            return self.name
+
+    def get_one(self,array_of_variables,filter_lang="",default=None):
+        "Try to get one of the equivalent variables"
+        for var in array_of_variables:
+            try:
+                return self.get_variable(var,filter_lang)
+            except:
+                pass
+        return default
 
     def make_tree(self):
         "Walk the directory and subdirectories and make the tree from it, note that the WebTree only have one Subtree, containing other subtrees"
@@ -23,6 +38,7 @@ class WebTree(object):
         self.config_path=os.path.join(self.website_path,self.path,"_config.txt")
         self.config_file=file_parser.parse_file(self.config_path)
         self.variables=self.config_file.variables
+        self.name=self.config_file.name
 
     def get_variable(self,varname,filter_lang="*"):
         "Get the corresponding variable"
@@ -53,6 +69,7 @@ class WebSubTree(WebTree):
         self.subtree={}
         self.nodes={}
         WebTree.__init__(self,website_path,path)
+        self.name=os.path.split(path)[-1]
 
     def get_variable(self,varname,filter_lang):
         "Get the variable, either in it's config or one of the above"
@@ -91,9 +108,10 @@ class WebSubTree(WebTree):
         #print self, self.subtree
         #print self.nodes
 
-    def get_all_nodes(self,filter_lang="*"):
+    def get_next_nodes(self,filter_lang="*"):
         "Get all nodes in the following language"
-        pass
+        for node in self.nodes:
+            yield self.get_node(node,filter_lang)
 
     def get_node(self,name,filter_lang=""):
         "Get a node with a specific name"
@@ -104,6 +122,21 @@ class WebSubTree(WebTree):
                 return self.nodes[name][filter_lang]
             return self.nodes[name]["*"] # specific language unavailable, all languages returned, better luck here
         raise IndexError("The node "+name+" doesn't exist")
+
+    def get_next_subtree(self,filter_lang="*"):
+        "Get all subtrees"
+        for tree in self.subtree:
+            yield self.get_subtree(tree,filter_lang)
+
+    def get_subtree(self,name,filter_lang="*"):
+        "Get a tree with a specific name"
+        if name in self.subtree:
+            if filter_lang=="": #No specific lang, so all langs are returned, should disapear soon I think
+                return self.subtree[name]
+            if filter_lang in self.subtree[name]:
+                return self.subtree[name][filter_lang]
+            return self.subtree[name]["*"] # specific language unavailable, all languages returned, better luck here
+        raise IndexError("The tree "+subtree+" doesn't exist")
 
     def get_content(self,name,filter_lang=""):
         "Get the content of the node in the specified language"
@@ -169,3 +202,4 @@ if __name__ == '__main__':
     # Do all the nominal tests
     s=makeWebsite("sites/example_website")
     s.print_webtree(" > ")
+    container(pagetitle="#_pagetitle_#",websitename="#_websitename_#",menu="##MENU##",page="##PAGE##")

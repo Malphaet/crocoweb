@@ -4,8 +4,9 @@ from tree_parser import *
 from model import dual
 import re,traceback
 
-def DataType(ext):
+def getDataType(name):
     "Return some kind of general types depending on the extention"
+    ext=os.path.splitext(name)[-1]
     data={"image":[".jpg",".png",".svg",".tiff",".jpeg"],
         "audio":[".ogg",".aiff",".mp3"],
         "text":[".txt",".md"],
@@ -13,33 +14,31 @@ def DataType(ext):
     for typename,extension in data.iteritems():
         if ext in extension:
             return typename
-    return None
+    return "other"
 
-def makeContainer(node):
-    c=DualContainer(node.name,node)
-    #print node.variables
-    #print node.config_file
-    c.load("generator/model/dual_menu.html")
-    c.replace("fr")
-    return c
+def makeContainer(module,site,current_node,previous_node,lang):
+    article_list=module.makeSubNodelist(site.tree,lang,getDataType)
+    previous=module.menuitem(site.get_variable("previous",lang),previous_node.path,"previous")
+    menu=module.menu(previous=previous,menulist="\n".join(article_list),articles=site.get_variable("articles",lang))
+    return menu
 
-def makeData(node):
-    c=DualData(node.name,node)
-    c.load("generator/model/dual_page.html")
-    c.replace("fr")
-    return c
+def makeData(module,current_node,lang):
+    return module.content(content=current_node.get_content(lang),title=current_node.get_one(["article_title",'title',"article_name","name"],lang))
 
-def makePage(node,cont,data):
-    c=DualContainer(node.name,node)
-    c.load("generator/model/dual_container.html")
-    c.replace('fr')
-    cont_t=cont.export()
-    data_t=data.export()
-    print c.export().replace("##PAGE##",data_t).replace("##MENU##",cont_t)
+def makePage(module,site,lang,menu,data):
+    return module.container(pagetitle=site.get_title(lang),websitename=site.get_one(['websitename',"webtitle","name","title"],"fr"),menu=menu,page=data)
 
 if __name__ == '__main__':
     site=makeWebsite("sites/example_website")
-    print dual.menuitem('da',"ma","text")
-    #cont=makeContainer(site)
-    #data=makeData(site.tree.get_node("index","fr"))
-    #makePage(site,cont,data)
+
+    lang="fr"
+    current_node=site.tree.get_node("index",lang)
+    previous_node=site.tree.get_node("index",lang)
+
+    menu=makeContainer(dual,site,current_node,previous_node,lang)
+    data=makeData(dual,current_node,lang)
+
+    page=makePage(dual,site,lang,menu,data)
+    with open("site_base/dual/test.html","w+") as f:
+        f.write(page)
+    print page

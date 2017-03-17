@@ -1,4 +1,4 @@
-def container(pagetitle="#_pagetitle_#",websitename="#_websitename_#",menu="##MENU##",page="##PAGE##"):
+def container(pagetitle="#_pagetitle_#",websitename="#_websitename_#",menu="\{menu\}",page="\{page\}"):
     "Return the global appearance of the website"
     return """<!DOCTYPE html>
     <html xmlns="http://www.w3.org/1999/xhtml">
@@ -62,25 +62,35 @@ def container(pagetitle="#_pagetitle_#",websitename="#_websitename_#",menu="##ME
     </html>""".format(MENU=menu,PAGE=page,websitename=websitename,pagetitle=pagetitle)
 
 
-def menu(previous="#_previous_#",menulist="\{menulist\}",articles="#_articles_#",preferences="#_preferences_#",about='#_about_#'):
+def menu(previous="",menulist="\{menulist\}",articles="#_articles_#"):
     "Return the menu list"
     return """<li class="text-center user-image-back">
         <img src="assets/img/logo.png" class="img-responsive" />
     </li>
-    <li><a href="index.html"><i class="fa fa-arrow-left "></i>{previous}</a></li>
+    {previous}
     <li  class="active">
         <a href="#"><i class="fa fa-folder"></i>{articles}<span class="fa arrow"></span></a>
         <ul class="nav nav-second-level">
         {menulist}
         </ul>
-        <li><a href="index.html"><i class="fa fa-gear "></i>{preferences}</a></li>
-        <li><a href="#"><i class="fa fa-edit "></i>{about}</a></li>
-    """.format(previous=previous,menulist=menulist,articles=articles,preferences=preferences,about=about)
+    """.format(previous=previous,menulist=menulist,articles=articles)
+
+def content(content="\{content\}",title="\{title\}"):
+    return """<div id="page-inner">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>{title}</h2>
+                {content}
+            </div>
+        </div>
+        <hr />
+    </div>""".format(content=content,title=title)
 
 # Inner functions
-icons={"image":"picture-o","audio":"music","text":"book","video":"film","folder":"folder","other":"file"} #"gear":"gear","edit":"edit"
+icons={"image":"picture-o","audio":"music","text":"book","video":"film","folder":"folder","other":"file","previous":"arrow-left"} #"gear":"gear","edit":"edit"
 
 def geticon(datatype):
+    "Get an Icon for the given datatype"
     try:
         return icons[datatype]
     except:
@@ -88,4 +98,16 @@ def geticon(datatype):
 
 def menuitem(text,link,datatype):
     "Generate a menu link"
+    print datatype
     return """<li><a href="{link}"><i class="fa fa-{datatype} "></i>{text}</a></li>""".format(text=text,link=link,datatype=geticon(datatype))
+
+def makeSubNodelist(subnode,lang,getdatatype):
+    items=[]
+    for node in subnode.get_next_nodes():
+        if node.name[0]!="_":
+            items.append(menuitem(node.get_title(lang),node.path,getdatatype(node.path)))
+    for node in subnode.get_next_subtree():
+        #print node,node.name
+        if node.name[0]!="_":
+            items.append(menuitem(node.get_title(lang),node.path,"folder"))
+    return items
