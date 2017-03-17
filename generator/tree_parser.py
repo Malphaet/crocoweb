@@ -16,6 +16,7 @@ class WebTree(object):
     def make_tree(self):
         "Walk the directory and subdirectories and make the tree from it, note that the WebTree only have one Subtree, containing other subtrees"
         self.tree=WebSubTree(self.website_path,"")
+        self.tree.parent_node=self
 
     def get_config(self):
         "Get the basic config from the website"
@@ -79,10 +80,14 @@ class WebSubTree(WebTree):
             path=os.path.join(self.path,f)
             if os.path.isdir(name):
                 var,lang=file_parser.create_lang(f)
-                self.subtree=file_parser.add_to_table(var,lang,WebSubTree(self.website_path,path),self.subtree)
+                new=WebSubTree(self.website_path,path)
+                new.parent_node=self
+                self.subtree=file_parser.add_to_table(var,lang,new,self.subtree)
             else:
                 var,lang=file_parser.create_lang(os.path.splitext(f)[0])
-                self.nodes=file_parser.add_to_table(var,lang,WebNode(self.website_path,path),self.nodes)
+                new=WebNode(self.website_path,path)
+                new.parent_node=self
+                self.nodes=file_parser.add_to_table(var,lang,new,self.nodes)
         #print self, self.subtree
         #print self.nodes
 
@@ -93,16 +98,16 @@ class WebSubTree(WebTree):
     def get_node(self,name,filter_lang=""):
         "Get a node with a specific name"
         if name in self.nodes:
-            if filter_lang!="": #No specific lang, so all langs are returned, should disapear soon I think
-                return self.nodes
+            if filter_lang=="": #No specific lang, so all langs are returned, should disapear soon I think
+                return self.nodes[name]
             if filter_lang in self.nodes[name]:
-                return self.nodes[filter_lang]
-            return self.nodes["*"] # specific language unavailable, all languages returned, better luck here
+                return self.nodes[name][filter_lang]
+            return self.nodes[name]["*"] # specific language unavailable, all languages returned, better luck here
         raise IndexError("The node "+name+" doesn't exist")
 
     def get_content(self,name,filter_lang=""):
         "Get the content of the node in the specified language"
-        return get_node(name,filter_lang).get_content(filter_lang)
+        return self.get_node(name,filter_lang).get_content(filter_lang)
 
     def print_webtree(self,prefix=""):
         "Print the tree and recuse"
@@ -131,7 +136,7 @@ class WebNode(WebSubTree):
     def get_variable(self,varname,filter_lang):
         "Get the corresponding variable, first in the Webnode, then the config and repeating up until the Root"
         try:
-            return self.config_file.get_variable(varname,filter_lang)
+            return self.parse.get_variable(varname,filter_lang)
         except:
             try:
                 return self.config_file.get_variable(varname,filter_lang)

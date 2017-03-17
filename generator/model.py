@@ -4,7 +4,7 @@ from tree_parser import *
 import re,traceback
 
 
-re_vars=re.compile(".*\#_(?P<variable>.*)_\#|.*\#\#(?P<section>.*)\#\#")
+re_vars=re.compile(".*\#_(?P<variable>.*)_\#")
 
 class HTMLPage(object):
     "Basic HTML object"
@@ -27,18 +27,11 @@ class HTMLPage(object):
         for line in self.model.splitlines():
             #print line
             try:
-
-                variable,section=re_vars.match(line).groups()
+                variable=re_vars.match(line).groups()[0]
                 if variable!=None:
-                    #print line,re_vars.match(line),variable
-                    #print self.node.config_file
-                    #print self.node.get_variable(variable,lang),variable
                     line=line.replace("#_"+variable+"_#",self.node.get_variable(variable,lang))
-                    #print line
-                elif section!=None:
-                    pass
             except AttributeError:
-                pass#print " > No match"
+                pass
             except:
                 print traceback.print_exc()
             self.html+=line
@@ -67,8 +60,13 @@ class DualContainer(Container):
 
 class DualData(Data):
     "Dual view"
-    pass
+    def __init__(self,name,node):
+        super(DualData,self).__init__(name,node)
 
+    def replace(self,lang):
+        self.html=self.model
+        self.html=self.html.replace("#_content_#",self.node.get_content("fr"))
+        self.html=self.html.replace("#_name_#",self.node.get_variable("title","fr"))
 
 def DataType(ext):
     "Return some kind of general types depending on the extention"
@@ -89,16 +87,22 @@ def makeContainer(node):
     c.replace("fr")
     return c
 
-def makeMakeContent(node):
+def makeData(node):
     c=DualData(node.name,node)
     c.load("generator/model/dual_page.html")
     c.replace("fr")
     return c
 
 def makePage(node,cont,data):
-    c=DualData(node.name,node)
-    c.replace("fr")
-    cont.export()
+    c=DualData(node.name,node.tree)
+    c.load("generator/model/dual_container.html")
+
+    print cont.export()
+    print data.export()
+    print c.export()
 
 if __name__ == '__main__':
-    makeContainer(makeWebsite("sites/example_website"))
+    site=makeWebsite("sites/example_website")
+    cont=makeContainer(site)
+    data=makeData(site.tree.get_node("index","fr"))
+    makePage(site,cont,data)

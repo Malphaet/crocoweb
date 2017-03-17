@@ -78,7 +78,7 @@ class WebPage(object):
             else:
                 if filter_lang=="*":
                     return self.variables[varname].values()[0]
-                raise KeyError("The variable "+varname+" doens't exist in the language "+filter_lang)
+        raise KeyError("The variable "+varname+" doens't exist in the language "+filter_lang)
 
     def export(self):
         "Export the Webobject in every language"
