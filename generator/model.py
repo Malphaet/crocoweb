@@ -94,12 +94,12 @@ def makeData(node):
     return c
 
 def makePage(node,cont,data):
-    c=DualData(node.name,node.tree)
+    c=DualContainer(node.name,node)
     c.load("generator/model/dual_container.html")
-
-    print cont.export()
-    print data.export()
-    print c.export()
+    c.replace('fr')
+    cont_t=cont.export()
+    data_t=data.export()
+    print c.export().replace("##PAGE##",data_t).replace("##MENU##",cont_t)
 
 if __name__ == '__main__':
     site=makeWebsite("sites/example_website")

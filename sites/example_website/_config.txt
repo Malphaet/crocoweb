@@ -11,6 +11,8 @@ previous_en: Previous articles
 previous_fr: Articles précédents
 preferences_en: Preferences
 preferences_fr: Préférences
+websitename_*: Tradiction
+pagetitle_*: Mouaulande
 about_en: About me
 about_fr: A propos
 ----
