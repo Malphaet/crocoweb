@@ -1,5 +1,6 @@
 # Copyleft (c) 2016 Cocobug All Rights Reserved.
 import os,sys,file_parser
+from model import dual
 
 class WebTree(object):
     "The tree of all website evolves during runtime as the files are requested"
@@ -202,4 +203,4 @@ if __name__ == '__main__':
     # Do all the nominal tests
     s=makeWebsite("sites/example_website")
     s.print_webtree(" > ")
-    container(pagetitle="#_pagetitle_#",websitename="#_websitename_#",menu="##MENU##",page="##PAGE##")
+    dual.container(pagetitle="#_pagetitle_#",websitename="#_websitename_#",menu="##MENU##",page="##PAGE##")
