@@ -23,76 +23,70 @@ testVky=group(name="vkyWeb_all",terminal=term,verbose=1,align=40)
 #testVky.addTest(testModel)
 
 #testParser time
-class CustomError(Exception):
-    """docstring for CustomError."""
-    def __init__(self, name,text):
-        super(CustomError, self).__init__(text)
-        self.name
 
 class testParser(unit):
     """Testing the file parser"""
     def __init__(self):
         super(testParser, self).__init__("file_parser")
+        self.results=[]
+        self.currentTest=""
+
+    def addSucess(self):
+        self.addResult(self.currentTest,True,"")
+
+    def addFailure(self,msg):
+        self.addResult(self.currentTest,False,msg)
+
 
     def test(self):
-        self.results=[]
-
         try:
+
             #raise IOError("Impossible to load config")
+            self.currentTest="parser:load"
             config=file_parser.parse_file("sites/example_website/_config.txt")
-            self.addResult("parser:load",True,"")
-        except Exception as e:
-            #config={} # Add a default config to help the rest of tests ?
-            self.addResult("parser:load",False,e)
+            self.addSucess()
 
-        try:
+            self.currentTest="parser_config"
             if (type(config)==file_parser.WebPage):
                 self.addResult("parser_config",True,"")
             else:
-                raise TypeError("config is supposed to be a WebPage")
-        except:
-            self.addResult("parser_config",False,e)
+                self.addFailure("config is supposed to be a WebPage")
 
-        try:
+            self.currentTest="parser_config:var:type"
             if type(config.variables)==dict:
-                self.addResult("parser_config:var:type",True,"")
+                self.addSucess()
             else:
-                raise TypeError("config is not a dict")
-        except Exception as e:
-            self.addResult("parser_config:var:type",False,e)
+                self.addFailure("config is not a dict")
 
 
-        try:
+            self.currentTest="parser_config:lang"
             for lang in ["*","en","fr"]:
                 if lang not in config.list_of_lang:
-                    raise ValueError("lang {} not in config".format(lang))
-            self.addResult("parser_config:lang",True,"")
-        except Exception as e:
-            self.addResult('parser_config:lang',False,e)
+                    self.addFailure("lang {} not in config".format(lang))
+            self.addSucess()
 
-
-        try:
+            self.currentTest="parser_config:content"
             if type(config.content)==list:
                 for e in config.content:
                     if len(e)!=2:
-                        raise IndexError("line is not formated with [text,[lang]]")
-                self.addResult("parser_config:content",True,"")
+                        self.addFailure("line is not formated with [text,[lang]]")
+                self.addSucess()
             else:
-                raise TypeError("content is supposed to be a list of lines&langs")
-        except Exception as e:
-            self.addResult('parser_config:content',False,e)
+                self.addFailure("content is supposed to be a list of lines&langs")
 
 
-        try:
+            self.currentTest="parser_config:generator"
             gen=config.get_next_line("*")
             if type(gen)==types.GeneratorType:
                 pass
-            self.addResult("parser_config:generator",True,"")
+            self.addSucess()
+
+            for l in config.get_next_line("*"):
+                print l
+            #print index.content
         except Exception as e:
-            self.addResult("parser_config:generator",False,e)
-        for l in config.get_next_line("*"):
-            print l
-        #print index.content
+            self.addFailure(e)
+
         return self.results
 
 testVky.addTest(testParser())
