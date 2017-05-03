@@ -21,9 +21,14 @@ Be wary that _ is a reserved character
 Technically those lines are not comments but since the text content of config files is ignored, it acts like one
 
 __en__
-
+ This part in a En only comment
 __/en__
 
+__fr__
+Cette partie est un commentaire français seulement
+__/fr__
+
 __comment__
-You can also comment anywhere by using any __lang__ not in the scope of generated ones
+You can also comment anywhere by using any
+__lang__ not in the scope of generated ones
 __/comment__
