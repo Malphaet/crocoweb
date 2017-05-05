@@ -12,7 +12,8 @@ previous_fr: Articles précédents
 preferences_en: Preferences
 preferences_fr: Préférences
 websitename_*: Tradiction
-title_*: Mouaulande
+title_en: Mulloland
+title_fr: Mulehollande
 about_en: About me
 about_fr: A propos
 ----

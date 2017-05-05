@@ -39,7 +39,7 @@ class WebTree(object):
         self.config_path=os.path.join(self.website_path,self.path,"_config.txt")
         self.config_file=file_parser.parse_file(self.config_path)
         self.variables=self.config_file.variables
-        self.name=self.config_file.name
+        self.name=self.config_file.name #Unsure it's actually useful
 
     def get_variable(self,varname,filter_lang="*"):
         "Get the corresponding variable"
@@ -48,10 +48,10 @@ class WebTree(object):
     def convert_local(self,files):
         pass
 
-    def print_webtree(self,prefix=""):
+    def print_webtree(self,lang="en",prefix=""):
         "Print a representation of the Tree"
         print self
-        self.tree.print_webtree(prefix)
+        self.tree.print_webtree(lang,prefix)
 
     def __repr__(self):
         return "{} @ {}".format(self.__class__.__name__,self.full_path)
@@ -143,18 +143,30 @@ class WebSubTree(WebTree):
         "Get the content of the node in the specified language"
         return self.get_node(name,filter_lang).get_content(filter_lang)
 
-    def print_webtree(self,prefix=""):
-        "Print the tree and recuse"
-        for item,langs in self.nodes.iteritems():
-            for lang,node in langs.iteritems():
-                print "{} [{}] {}".format(prefix,lang,node)
-                print prefix+" +-----------"
-                print "{} | {}".format(prefix,node.get_content("en"))
-
-        for item,langs in self.subtree.iteritems():
-            for lang,node in langs.iteritems():
-                print "{} [{}] {}".format(prefix,lang,node)
-                node.print_webtree(prefix+"    ")
+    def print_webtree(self,lang="en",prefix=""):
+        "Print the tree and recurse"
+        #print self.get_next_subtree(lang)
+        # for item,langs in self.nodes.iteritems():
+        #     for lang,node in langs.iteritems(): # There is a proper way do this, it ain't this one
+        #     #print node
+        #     #print self.get_content(node,lang)
+        #         print "{} [{}] {}".format(prefix,lang,node)
+        #         print prefix+" +-----------"
+        #         print "{} | {}".format(prefix,node.get_content(lang))
+        #
+        # for item,langs in self.subtree.iteritems():
+        #     for lang,node in langs.iteritems():
+        #         print "{} [{}] {}".format(prefix,lang,node)
+        #         node.print_webtree(lang,prefix+"    ")
+        #print self
+        for node in self.get_next_nodes(lang):
+             print "{} [{}] {}".format(prefix,lang,node)
+             print prefix+" +-----------"
+             newL="\n{} [{}] | ".format(prefix,lang)
+             print "{} [{}] | {}".format(prefix,lang,node.get_content(lang).replace('\n',newL))
+        for tree in self.get_next_subtree(lang):
+            print "{} [{}] {}".format(prefix,lang,node)
+            tree.print_webtree(lang,prefix+"    ")
 
 class WebNode(WebSubTree):
     "A webfile, as seen from the tree, contains a link to a WebPage/Webfile in every langague"
@@ -166,6 +178,9 @@ class WebNode(WebSubTree):
         self.name,self.type=os.path.splitext(self.path)
         if self.type==".txt":
             self.open_node()
+
+    def print_webtree(self,lang,prefix):
+        raise AttributeError("WebNode doesn't have an attribute print_webtree")
 
     def get_variable(self,varname,filter_lang):
         "Get the corresponding variable, first in the Webnode, then the config and repeating up until the Root"
@@ -202,5 +217,5 @@ def makeWebsite(website):
 if __name__ == '__main__':
     # Do all the nominal tests
     s=makeWebsite("sites/example_website")
-    s.print_webtree(" > ")
+    s.print_webtree("en"," > ")
     dual.container(pagetitle="#_pagetitle_#",websitename="#_websitename_#",menu="##MENU##",page="##PAGE##")

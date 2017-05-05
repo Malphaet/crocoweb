@@ -126,17 +126,58 @@ class testTree(simple):
         else:
             self.addFailure("Repr incorrect")
 
-        status=True
+
         self.currentTest="tree:get_title"
+        if webt.get_title("en")!="Mulloland":
+            self.addFailure("lang incorrect [en]")
+        elif webt.get_title("fr")!="Mulehollande":
+            self.addFailure("lang incorrect [fr]")
+        else:
+            self.addSucess()
+
+        self.currentTest="tree:config"
+        if type(webt.config_file)!=file_parser.WebPage:
+            self.addFailure("config malformed"+srt(type(webt.config_file)))
+        else:
+            self.addSucess()
+
+
+        self.currentTest="tree:name"
+        if webt.name!="_config.txt":
+            self.addFailure("malformed name"+webt.name)
+        else:
+            self.addSucess()
+
+        #webt.print_webtree("fr",'[fr] ')
+        self.currentTest="tree:Poetry"
+        poetry=webt.tree.get_subtree("Poetry","fr")
+        if type(poetry)!=tree_parser.WebSubTree:
+            self.addFailure("can't acess the Poetry subtree")
+        else:
+            self.addSucess()
+
+        self.currentTest="tree:Poetry:loading"
+        poem1=poetry.get_node("poetry1","fr")
+        if type(poem1)!=tree_parser.WebNode:
+            self.addFailure("can't acess the node")
+        else:
+            self.addSucess()
+
+        self.currentTest="tree:Poetry:config"
+        status=True
         for l in list_of_lang:
-            if webt.get_title(l)!="Mouaulande":
-                self.addFailure("lang incorrect {}".format(l))
+            if poem1.get_variable("title",l)!="Rose":
                 status=False
+                self.addFailure("title incorrect for {}".format(l))
         if status:
             self.addSucess()
 
-        print webt.get_config()
-        webt.print_webtree()
+        self.currentTest="tree:Poetry:content"
+
+        if poem1.get_content("fr")=="Une rose qui passe\nQuelle est bien belle\nMais pourquoi donc\nEsceque tu est jolie":
+            self.addSucess()
+        else:
+            self.addFailure("can't load content")
 
 testVky=group(name="vkyWeb_all",terminal=term,verbose=1,align=42)
 #testConfig=group(name="config",terminal=term,prefix="| ")
@@ -153,5 +194,6 @@ testVky=group(name="vkyWeb_all",terminal=term,verbose=1,align=42)
 testParser("file_parser").test()
 testVky.addTest(testParser("file_parser"))
 testVky.addTest(testTree("tree_parser"))
+#testVky.addTest(testConfig("testConfig",config)) test a config file
 
 testVky.test()

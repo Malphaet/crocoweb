@@ -72,7 +72,6 @@ class WebPage(object):
         #print "Getting",varname,filter_lang,"in",self.variables
         #if varname in self.reserved:
         #    return getattr(self,varname)
-
         if varname in self.variables:
             if filter_lang in self.variables[varname]:
                 return self.variables[varname][filter_lang]
