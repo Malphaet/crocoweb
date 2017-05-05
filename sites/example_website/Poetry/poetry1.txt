@@ -4,7 +4,7 @@ author_*: Max
 ----
 
 __en__
-A Rose flew
+A rose flew
 Flower of beauty
 Why are you
 so pretty

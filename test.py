@@ -173,11 +173,11 @@ class testTree(simple):
             self.addSucess()
 
         self.currentTest="tree:Poetry:content"
-
         if poem1.get_content("fr")=="Une rose qui passe\nQuelle est bien belle\nMais pourquoi donc\nEsceque tu est jolie":
             self.addSucess()
         else:
             self.addFailure("can't load content")
+        
 
 testVky=group(name="vkyWeb_all",terminal=term,verbose=1,align=42)
 #testConfig=group(name="config",terminal=term,prefix="| ")

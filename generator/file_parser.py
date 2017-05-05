@@ -39,6 +39,8 @@ class WebPage(object):
     def get_next_line(self,filter_lang="*"):
         "Get a line of text, with a filter if needed"
         for line,lang in self.content:
+            if line.find("rose")>0:
+                print lang,line,filter_lang,self.match_with_lang(lang,filter_lang)
             if self.match_with_lang(lang,filter_lang):
                 yield line
 
@@ -49,16 +51,17 @@ class WebPage(object):
                 return 1
         return 0
 
-    def get_text(self,filter):
+    def get_text(self,filter_lang):
         "Get the whole text matching the filter, note that the * filter will ONLY match if the text is meant for all, not all text"
         text=""
-        for line in self.get_next_line(filter):
+        for line in self.get_next_line(filter_lang):
             text+=line
             text+=os.linesep
         return text
 
     def add_variable(self,var,value):
         """Add the folowing variable and update the necessary constants
+        Note that it's one of the only ways to add a language to the list_of_lang
         Takes a variable (with an eventual langague tag) and it's value"""
         var,lang=create_lang(var)
         if var in self.reserved:
@@ -156,6 +159,7 @@ def parse_file(file_name):
             print " >",line
         except:
             traceback.print_exc()
+    page.list_of_lang.update(used_langs) # Not sure this fix is actually a good idea, could just force adding langs in variables
     return page
 
 re_config_line=re.compile("(?P<variable>.+): (?P<value>.*)")
