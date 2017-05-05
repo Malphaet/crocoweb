@@ -39,8 +39,6 @@ class WebPage(object):
     def get_next_line(self,filter_lang="*"):
         "Get a line of text, with a filter if needed"
         for line,lang in self.content:
-            if line.find("rose")>0:
-                print lang,line,filter_lang,self.match_with_lang(lang,filter_lang)
             if self.match_with_lang(lang,filter_lang):
                 yield line
 
