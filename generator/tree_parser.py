@@ -148,8 +148,8 @@ class WebSubTree(WebTree):
         for item,langs in self.nodes.iteritems():
             for lang,node in langs.iteritems():
                 print "{} [{}] {}".format(prefix,lang,node)
-                print "-----------"
-                print node.get_content("en")
+                print prefix+" +-----------"
+                print "{} | {}".format(prefix,node.get_content("en"))
 
         for item,langs in self.subtree.iteritems():
             for lang,node in langs.iteritems():
