@@ -228,8 +228,62 @@ class testDual(simple):
 
     def _testDual(self):
         self.currentTest("dual:icon")
-        print(dual.geticon('audio'))
+        if((dual.geticon('audio')=="music") and (dual.geticon("other")=="file")):
+            self.addSuccess()
+        else:
+            self.addFailure("non conform dict"+str([e for e in dual.icons.keys()]))
+
+        dualDict={"pagetitle":"#_pagetitle_#","websitename":"#_websitename_#","menu":"\{menu\}","page":"\{page\}"}
+        self.testThisDictOnDis("dual:container",dualDict,dual.container,str)
+
+        menuDict={'previous':"TESTPREV",'menulist':"\{menulist\}",'articles':"#_articles_#"}
+        self.testThisDictOnDis("dual:menu",menuDict,dual.menu,str)
+
+        contentDict={"content":"\{content\}","title":"\{title\}"}
+        self.testThisDictOnDis("dual:content",contentDict,dual.content,str)
+
+        menuDict={"text":"TESTOEXT","link":"NONE","datatype":"audio"}
+        menuDictReturn={"text":"TESTOEXT","link":"NONE","datatype":dual.geticon("audio")}
+        self.testThisDictOnDis("dual:menuitem",menuDict,dual.menuitem,str,menuDictReturn)
+
+        self.currentTest("dual:makeSubNodelist")
+
+        self.currentTest("site:loading")
+        site=tree_parser.makeWebsite("sites/example_website")
         self.addSuccess()
+
+        status=True
+        linkList=dual.makeSubNodelist(site.tree,"en",model.getDataType)
+        nominalLinkList=['<li><a href="index.html"><i class="fa fa-book "></i>Transaltionus</a></li>',
+        '<li><a href="article1.html"><i class="fa fa-book "></i>First article</a></li>',
+        '<li><a href="Poetry"><i class="fa fa-folder "></i>Poetry</a></li>']
+        for i in range(len(nominalLinkList)):
+            if linkList[i] not in nominalLinkList:
+                self.addFailure("link {} malformed (expected {})".format(i,nominalLinkList[i]),nonDestructive=True)
+                status=False
+                
+        if status:
+            self.addSuccess()
+
+    def testThisDictOnDis(self,name,testDict,testFunction,returnType=str,returnDict=None):
+        res=testFunction(**testDict)
+        if returnDict==None:
+            returnDict=testDict
+        self.currentTest(name+":type")
+        if type(res)==returnType:
+            self.addSuccess()
+        else:
+            self.addFailure("wrong return type (expected {}, got {})".format(type(res),returnType))
+        # print(res)
+        self.currentTest(name+':content')
+        status=True
+        for key,val in returnDict.items():
+            if res.find(val)<0:
+                self.addFailure("can't find {}".format(key))
+                status=False
+                break
+        if status:
+            self.addSuccess()
         # menuitem(text,link,datatype)
         # makeSubNodelist(subnode,lang,getdatatype)
 

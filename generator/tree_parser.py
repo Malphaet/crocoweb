@@ -45,7 +45,7 @@ class WebTree(object):
         self.config_path=os.path.join(self.website_path,self.path,"_config.txt")
         self.config_file=file_parser.parse_file(self.config_path)
         self.variables=self.config_file.variables
-        self.name=self.config_file.name #Unsure it's actually useful
+        self.name=self.config_file.name #Should actually, rename the file to allow customs names in _config
 
     def get_variable(self,varname,filter_lang="*"):
         "Get the corresponding variable"
