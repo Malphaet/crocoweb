@@ -22,45 +22,46 @@ class testParser(simple):
 
     def _tests_all(self):
         config_langs=["*","en","fr"]
-        self.currentTest="parser:load"
+        self.currentTest("parser:load")
         config=file_parser.parse_file("sites/example_website/_config.txt")
-        self.addSucess()
+        self.addSuccess()
 
-        self.currentTest="parser_config"
+        self.currentTest("parser_config")
         if (type(config)==file_parser.WebPage):
-            self.addResult("parser_config",True,"")
+            self.addSuccess()
         else:
             self.addFailure("config is supposed to be a WebPage")
 
-        self.currentTest="parser_config:var:type"
+
+        self.currentTest("parser_config:var:type")
         if type(config.variables)==dict:
-            self.addSucess()
+            self.addSuccess()
         else:
             self.addFailure("config is not a dict")
 
-        self.currentTest="parser_config:lang"
+        self.currentTest("parser_config:lang")
         for lang in config_langs:
             if lang not in config.list_of_lang:
                 self.addFailure("lang {} not in config".format(lang))
-        self.addSucess()
+        self.addSuccess()
 
-        self.currentTest="parser_config:content"
+        self.currentTest("parser_config:content")
         if type(config.content)==list:
             for e in config.content:
                 if len(e)!=2:
                     self.addFailure("line is not formated with [text,[lang]]")
-            self.addSucess()
+            self.addSuccess()
         else:
             self.addFailure("content is supposed to be a list of lines&langs")
 
-        self.currentTest="parser_config:generator"
+        self.currentTest("parser_config:generator")
         gen=config.get_next_line("*")
         if type(gen)==types.GeneratorType:
-            self.addSucess()
+            self.addSuccess()
         else:
             self.addFailure("get_next_line is supposed to be a generator")
 
-        self.currentTest="parser_config:generator:lang"
+        self.currentTest("parser_config:generator:lang")
         content_by_lang={'*':[],'fr':[],'en':[]}
         for line in config.content:
             txt,langs=line[0],line[1]
@@ -70,30 +71,29 @@ class testParser(simple):
                 elif lang=="*":
                     for l in config_langs:
                         content_by_lang[l].append(txt)
-        succes=True
+        success=True
         for l in ["en","fr"]:
             generator_table=[e for e in config.get_next_line(l)]
             if len(content_by_lang[l])!=len(generator_table):
                 self.addFailure("generator and model don't have the same length [{}]".format(l))
-                succes=False
+                success=False
             for i in range(len(generator_table)):
                 if generator_table[i]!=content_by_lang[l][i]:
                     self.addFailure("generator and model have different content [{}:{}]".format(l,i))
-                    succes=False
-        if succes:
-            self.addSucess()
+                    success=False
+        if success:
+            self.addSuccess()
 
-        self.currentTest="parser_config:generator:type"
+        self.currentTest("parser_config:generator:type")
         for l in config.get_next_line("*"):
             if type(l)!=str:
                 self.addFailure("type is supposed to be a string")
 
-        self.currentTest="parser_file:open"
+        self.currentTest("parser_file:open")
         index=file_parser.parse_file("sites/example_website/index.txt")
-        self.addSucess()
+        self.addSuccess()
 
-
-        self.currentTest="parser_file"
+        self.currentTest("parser_file")
         contentCheck={
             'error':['![Alt text](/path/to/img.jpg)', "If you don't close properly something __a lot of content will be lost", '__in the generation', 'process', 'Like this']
             ,"*":['![Alt text](/path/to/img.jpg)', 'Like this']
@@ -102,11 +102,11 @@ class testParser(simple):
             ,"hidden":['![Alt text](/path/to/img.jpg)', 'Hiden text, can be used in many ways. Note that hidden is not a reserved keyword and is just treated separately in the generation process.', 'Like this']
             ,"useless":['![Alt text](/path/to/img.jpg)', 'The useless keyword is not reserved either, and since it wont be treated in the generation process, it will just be lost', 'Like this']
         }
-        self.addSucess()
+        self.addSuccess()
         for lang in contentCheck.keys():
-            self.currentTest="parser_file:"+lang
+            self.currentTest("parser_file:"+lang)
             if contentCheck[lang]==[e for e in index.get_next_line(lang)]:
-                self.addSucess()
+                self.addSuccess()
             else:
                 self.addFailure("Error text doesn't match")
 
@@ -118,66 +118,66 @@ class testTree(simple):
 
     def _testTree(self):
         list_of_lang=["fr","en","*"]
-        self.currentTest="tree:load"
+        self.currentTest("tree:load")
         webt=tree_parser.makeWebsite("sites/example_website")
-        self.addSucess()
+        self.addSuccess()
 
-        self.currentTest="tree:repr"
+        self.currentTest("tree:repr")
         if repr(webt)=="WebTree @ sites/example_website/":
-            self.addSucess()
+            self.addSuccess()
         else:
             self.addFailure("Repr incorrect")
 
 
-        self.currentTest="tree:get_title"
+        self.currentTest("tree:get_title")
         if webt.get_title("en")!="Mulloland":
             self.addFailure("lang incorrect [en]")
         elif webt.get_title("fr")!="Mulehollande":
             self.addFailure("lang incorrect [fr]")
         else:
-            self.addSucess()
+            self.addSuccess()
 
-        self.currentTest="tree:config"
+        self.currentTest("tree:config")
         if type(webt.config_file)!=file_parser.WebPage:
             self.addFailure("config malformed"+srt(type(webt.config_file)))
         else:
-            self.addSucess()
+            self.addSuccess()
 
 
-        self.currentTest="tree:name"
+        self.currentTest("tree:name")
         if webt.name!="_config.txt":
             self.addFailure("malformed name"+webt.name)
         else:
-            self.addSucess()
+            self.addSuccess()
 
         #webt.print_webtree("fr",'[fr] ')
-        self.currentTest="tree:Poetry"
+        self.currentTest("tree:Poetry")
         poetry=webt.tree.get_subtree("Poetry","fr")
         if type(poetry)!=tree_parser.WebSubTree:
             self.addFailure("can't acess the Poetry subtree")
         else:
-            self.addSucess()
+            self.addSuccess()
 
-        self.currentTest="tree:Poetry:loading"
+        self.currentTest("tree:Poetry:loading")
         poem1=poetry.get_node("poetry1","fr")
         if type(poem1)!=tree_parser.WebNode:
             self.addFailure("can't acess the node")
         else:
-            self.addSucess()
+            self.addSuccess()
 
-        self.currentTest="tree:Poetry:config"
+        self.currentTest("tree:Poetry:config")
         status=True
         for l in list_of_lang:
             if poem1.get_variable("title",l)!="Rose":
                 status=False
                 self.addFailure("title incorrect for {}".format(l))
         if status:
-            self.addSucess()
+            self.addSuccess()
 
-        self.currentTest="tree:Poetry:content"
+        self.currentTest("tree:Poetry:content")
         poem1content=poem1.get_content("fr").split("\n")
         if poem1content==["Une rose qui passe","Quelle est bien belle","Mais pourquoi donc","Esceque tu est jolie",""]:
-            self.addSucess()
+            self.addSuccess()
         else:
             self.addFailure("can't load content")
 
@@ -189,17 +189,37 @@ class testModel(simple):
         super(testModel, self).__init__(arg)
 
     def _testDual(self):
+        self.currentTest("loading:nodes")
         site=tree_parser.makeWebsite("sites/example_website")
-
         lang="fr"
         current_node=site.tree.get_node("index",lang)
         previous_node=site.tree.get_node("index",lang)
+        self.addSuccess()
 
-        menu=model.makeContainer(dual,site,current_node,previous_node,lang)
-        data=model.makeData(dual,current_node,lang)
-        
-        page=model.makePage(dual,site,lang,menu,data)
-        print(page)
+        self.currentTest("model:icons")
+        status=True
+        batch={
+            "image":['/test.jpg',"very.bad.practice.png","mono/dont.do.txt/this.mp3.svg"],
+            "audio":["33/%20mother%!of bad%20names.aiff"],
+            "text":["no more/bad/name.txt"],
+            "other":["why tho.why"]
+        }
+        for result,filenames in batch.items():
+            for f in filenames:
+                if (result!=model.getDataType(f)):
+                    self.addFailure("{} is not {} ({} found)".format(f,result,model.getDataType(f)))
+                    status=False
+                    break
+            if not status:
+                break
+        if status:
+            self.addSuccess()
+        #
+        # menu=model.makeContainer(dual,site,current_node,previous_node,lang)
+        # data=model.makeData(dual,current_node,lang)
+        #
+        # page=model.makePage(dual,site,lang,menu,data)
+        #print(page)
 
 testVky=group(name="vkyWeb_all",terminal=term,verbose=1,align=42)
 #testConfig=group(name="config",terminal=term,prefix="| ")
