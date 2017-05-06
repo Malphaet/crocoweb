@@ -188,7 +188,7 @@ class testModel(simple):
     def __init__(self,arg):
         super(testModel, self).__init__(arg)
 
-    def _testDual(self):
+    def _testModel(self):
         self.currentTest("loading:nodes")
         site=tree_parser.makeWebsite("sites/example_website")
         lang="fr"
@@ -207,7 +207,7 @@ class testModel(simple):
         for result,filenames in batch.items():
             for f in filenames:
                 if (result!=model.getDataType(f)):
-                    self.addFailure("{} is not {} ({} found)".format(f,result,model.getDataType(f)))
+                    self.addFailure("'{}' is not from type {} ({} found)".format(f,result,model.getDataType(f)))
                     status=False
                     break
             if not status:
@@ -220,6 +220,18 @@ class testModel(simple):
         #
         # page=model.makePage(dual,site,lang,menu,data)
         #print(page)
+
+class testDual(simple):
+    """docstring for testDual."""
+    def __init__(self, arg):
+        super(testDual, self).__init__(arg)
+
+    def _testDual(self):
+        self.currentTest("dual:icon")
+        print(dual.geticon('audio'))
+        self.addSuccess()
+        # menuitem(text,link,datatype)
+        # makeSubNodelist(subnode,lang,getdatatype)
 
 testVky=group(name="vkyWeb_all",terminal=term,verbose=1,align=42)
 #testConfig=group(name="config",terminal=term,prefix="| ")
@@ -237,6 +249,7 @@ testParser("file_parser").test()
 testVky.addTest(testParser("file_parser"))
 testVky.addTest(testTree("tree_parser"))
 testVky.addTest(testModel("model"))
+testVky.addTest(testDual("model:dual"))
 #testVky.addTest(testConfig("testConfig",config)) test a config file
 
 testVky.test()

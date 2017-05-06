@@ -100,7 +100,7 @@ def geticon(datatype):
 
 def menuitem(text,link,datatype):
     "Generate a menu link"
-    print (datatype)
+    #print (datatype)
     return """<li><a href="{link}"><i class="fa fa-{datatype} "></i>{text}</a></li>""".format(text=text,link=link,datatype=geticon(datatype))
 
 def makeSubNodelist(subnode,lang,getdatatype):
