@@ -1,13 +1,13 @@
 # Copyleft (c) 2016 Cocobug All Rights Reserved.
 # coding=utf-8
 
-import re,traceback
+import re,traceback,os
 
 try:
     from tree_parser import *
-    from model import dual
+    from models import dual
 except:
-    from generator.model import dual
+    from generator.models import dual
     from generator import tree_parser
 
 def getDataType(name):

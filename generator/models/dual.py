@@ -1,3 +1,5 @@
+import os
+
 def container(pagetitle="#_pagetitle_#",websitename="#_websitename_#",menu="\{menu\}",page="\{page\}"):
     "Return the global appearance of the website"
     return """<!DOCTYPE html>

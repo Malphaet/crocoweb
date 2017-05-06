@@ -6,12 +6,14 @@ import types
 from blessings import Terminal
 from generator import *
 
+
 #import vkyweb
 
 term=Terminal()
 unit=minitest.testUnit
 simple=minitest.simpleTestUnit
 group=minitest.testGroup
+dual=models.dual
 
 class testParser(simple):
     """Testing the file parser"""
@@ -181,6 +183,24 @@ class testTree(simple):
 
         #webt.print_webtree('en')
 
+class testModel(simple):
+    """docstring for testModel."""
+    def __init__(self,arg):
+        super(testModel, self).__init__(arg)
+
+    def _testDual(self):
+        site=tree_parser.makeWebsite("sites/example_website")
+
+        lang="fr"
+        current_node=site.tree.get_node("index",lang)
+        previous_node=site.tree.get_node("index",lang)
+
+        menu=model.makeContainer(dual,site,current_node,previous_node,lang)
+        data=model.makeData(dual,current_node,lang)
+        
+        page=model.makePage(dual,site,lang,menu,data)
+        print(page)
+
 testVky=group(name="vkyWeb_all",terminal=term,verbose=1,align=42)
 #testConfig=group(name="config",terminal=term,prefix="| ")
 #testParser=group(name="parser",terminal=term,prefix="| ")
@@ -196,6 +216,7 @@ testVky=group(name="vkyWeb_all",terminal=term,verbose=1,align=42)
 testParser("file_parser").test()
 testVky.addTest(testParser("file_parser"))
 testVky.addTest(testTree("tree_parser"))
+testVky.addTest(testModel("model"))
 #testVky.addTest(testConfig("testConfig",config)) test a config file
 
 testVky.test()
