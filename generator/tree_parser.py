@@ -1,6 +1,12 @@
 # Copyleft (c) 2016 Cocobug All Rights Reserved.
-import os,sys,file_parser
-from model import dual
+import os,sys
+
+try:
+    from generator import file_parser
+    from generator.model import dual
+except:
+    import file_parser
+    from model import dual
 
 class WebTree(object):
     "The tree of all website evolves during runtime as the files are requested"
@@ -50,7 +56,7 @@ class WebTree(object):
 
     def print_webtree(self,lang="en",prefix=""):
         "Print a representation of the Tree"
-        print self
+        print (self)
         self.tree.print_webtree(lang,prefix)
 
     def __repr__(self):
@@ -106,8 +112,8 @@ class WebSubTree(WebTree):
                 new=WebNode(self.website_path,path)
                 new.parent_node=self
                 self.nodes=file_parser.add_to_table(var,lang,new,self.nodes)
-        #print self, self.subtree
-        #print self.nodes
+        #print( self, self.subtree)
+        #print( self.nodes)
 
     def get_next_nodes(self,filter_lang="*"):
         "Get all nodes in the following language"
@@ -145,27 +151,13 @@ class WebSubTree(WebTree):
 
     def print_webtree(self,lang="en",prefix=""):
         "Print the tree and recurse"
-        #print self.get_next_subtree(lang)
-        # for item,langs in self.nodes.iteritems():
-        #     for lang,node in langs.iteritems(): # There is a proper way do this, it ain't this one
-        #     #print node
-        #     #print self.get_content(node,lang)
-        #         print "{} [{}] {}".format(prefix,lang,node)
-        #         print prefix+" +-----------"
-        #         print "{} | {}".format(prefix,node.get_content(lang))
-        #
-        # for item,langs in self.subtree.iteritems():
-        #     for lang,node in langs.iteritems():
-        #         print "{} [{}] {}".format(prefix,lang,node)
-        #         node.print_webtree(lang,prefix+"    ")
-        #print self
         for node in self.get_next_nodes(lang):
-             print "{} [{}] {}".format(prefix,lang,node)
-             print prefix+" +-----------"
+             print( "{} [{}] {}".format(prefix,lang,node))
+             print( prefix+" +-----------")
              newL="\n{} [{}] | ".format(prefix,lang)
-             print "{} [{}] | {}".format(prefix,lang,node.get_content(lang).replace('\n',newL))
+             print ("{} [{}] | {}".format(prefix,lang,node.get_content(lang).replace('\n',newL)))
         for tree in self.get_next_subtree(lang):
-            print "{} [{}] {}".format(prefix,lang,node)
+            print( "{} [{}] {}".format(prefix,lang,node))
             tree.print_webtree(lang,prefix+"    ")
 
 class WebNode(WebSubTree):
@@ -215,6 +207,7 @@ def makeWebsite(website):
         raise IOError("Unable to find the specified website")
 
 if __name__ == '__main__':
+    import file_parser
     # Do all the nominal tests
     s=makeWebsite("sites/example_website")
     s.print_webtree("en"," > ")

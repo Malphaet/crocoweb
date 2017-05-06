@@ -74,7 +74,7 @@ class testParser(simple):
             if len(content_by_lang[l])!=len(generator_table):
                 self.addFailure("generator and model don't have the same length [{}]".format(l))
                 succes=False
-            for i in xrange(len(generator_table)):
+            for i in range(len(generator_table)):
                 if generator_table[i]!=content_by_lang[l][i]:
                     self.addFailure("generator and model have different content [{}:{}]".format(l,i))
                     succes=False
@@ -180,7 +180,7 @@ class testTree(simple):
             self.addFailure("can't load content")
 
         #webt.print_webtree('en')
-        
+
 testVky=group(name="vkyWeb_all",terminal=term,verbose=1,align=42)
 #testConfig=group(name="config",terminal=term,prefix="| ")
 #testParser=group(name="parser",terminal=term,prefix="| ")

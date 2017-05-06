@@ -1,8 +1,14 @@
 # Copyleft (c) 2016 Cocobug All Rights Reserved.
 # coding=utf-8
-from tree_parser import *
-from model import dual
+
 import re,traceback
+
+try:
+    from tree_parser import *
+    from model import dual
+except:
+    from generator.model import dual
+    from generator import tree_parser
 
 def getDataType(name):
     "Return some kind of general types depending on the extention"
@@ -11,7 +17,7 @@ def getDataType(name):
         "audio":[".ogg",".aiff",".mp3"],
         "text":[".txt",".md"],
         "video":[".mov",".mp4"]}
-    for typename,extension in data.iteritems():
+    for typename,extension in data.items():
         if ext in extension:
             return typename
     return "other"
@@ -41,4 +47,4 @@ if __name__ == '__main__':
     page=makePage(dual,site,lang,menu,data)
     with open("site_base/dual/test.html","w+") as f:
         f.write(page)
-    print page
+    print(page)

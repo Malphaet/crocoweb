@@ -2,7 +2,7 @@
 # coding=utf-8
 
 
-import os,sys,tree_parser
+import os,sys
 import re
 import traceback
 
@@ -153,8 +153,8 @@ def parse_file(file_name):
                     page.add_content(text,line_langs)
 
         except re.error:
-            print "Error parsing",file_name,"contain a non parsable line:"
-            print " >",line
+            print("Error parsing",file_name,"contain a non parsable line:")
+            print(" >",line)
         except:
             traceback.print_exc()
     page.list_of_lang.update(used_langs) # Not sure this fix is actually a good idea, could just force adding langs in variables
@@ -164,18 +164,13 @@ re_config_line=re.compile("(?P<variable>.+): (?P<value>.*)")
 re_text_line=re.compile("__(?P<beg_lang>[\*\w]+)__|__/(?P<end_lang>[\*\w]+)__|(?P<text>.*)")
 
 if __name__ == '__main__':
+    import tree_parser
     config=parse_file("sites/example_website/_config.txt")
     index=parse_file("sites/example_website/index.txt")
 
-    #print config.variables
-    #print config.list_of_lang
-    #print config.content
-    #for l in config.get_next_line("*"):
-    #    print l
-    #print index.content
-    print "All text only"
-    print index.get_text("*")
-    print "Fr text only"
-    print index.get_text("fr")
-    print "En text only"
-    print index.get_text("en")
+    print("All text only")
+    print(index.get_text("*"))
+    print("Fr text only")
+    print(index.get_text("fr"))
+    print("En text only")
+    print(index.get_text("en"))

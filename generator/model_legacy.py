@@ -1,8 +1,12 @@
 # Copyleft (c) 2016 Cocobug All Rights Reserved.
 # coding=utf-8
-from tree_parser import *
+
 import re,traceback
 
+try:
+    from tree_parser import *
+except:
+    from generator.tree_parser import *
 
 re_vars=re.compile(".*\#_(?P<variable>.*)_\#")
 
@@ -20,12 +24,12 @@ class HTMLPage(object):
             with open(path) as a:
                 self.model=a.read()
         except:
-            print "Error loading model"
+            print( "Error loading model")
 
     def replace(self,lang):
         self.html=""
         for line in self.model.splitlines():
-            #print line
+            #print (line)
             try:
                 variable=re_vars.match(line).groups()[0]
                 if variable!=None:
@@ -33,10 +37,10 @@ class HTMLPage(object):
             except AttributeError:
                 pass
             except:
-                print traceback.print_exc()
+                print( traceback.print_exc())
             self.html+=line
             self.html+=os.linesep
-        #print self.html
+        #print( self.html)
 
     def export(self):
         "Generate the HTML code and output it"
@@ -75,14 +79,15 @@ def DataType(ext):
         "text":[".txt",".md"],
         "video":[".mov",".mp4"]}
     for typename,extension in data.iteritems():
+        print typename,extension
         if ext in extension:
             return typename
     return None
 
 def makeContainer(node):
     c=DualContainer(node.name,node)
-    #print node.variables
-    #print node.config_file
+    #print (node.variables)
+    #print( node.config_file)
     c.load("generator/model/dual_menu.html")
     c.replace("fr")
     return c
@@ -99,7 +104,7 @@ def makePage(node,cont,data):
     c.replace('fr')
     cont_t=cont.export()
     data_t=data.export()
-    print c.export().replace("##PAGE##",data_t).replace("##MENU##",cont_t)
+    print( c.export().replace("##PAGE##",data_t).replace("##MENU##",cont_t))
 
 if __name__ == '__main__':
     site=makeWebsite("sites/example_website")

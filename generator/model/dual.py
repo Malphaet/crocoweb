@@ -98,7 +98,7 @@ def geticon(datatype):
 
 def menuitem(text,link,datatype):
     "Generate a menu link"
-    print datatype
+    print (datatype)
     return """<li><a href="{link}"><i class="fa fa-{datatype} "></i>{text}</a></li>""".format(text=text,link=link,datatype=geticon(datatype))
 
 def makeSubNodelist(subnode,lang,getdatatype):
@@ -107,7 +107,7 @@ def makeSubNodelist(subnode,lang,getdatatype):
         if node.name[0]!="_":
             items.append(menuitem(node.get_title(lang),node.path,getdatatype(node.path)))
     for node in subnode.get_next_subtree():
-        #print node,node.name
+        #print(node,node.name)
         if node.name[0]!="_":
             items.append(menuitem(node.get_title(lang),node.path,"folder"))
     return items
