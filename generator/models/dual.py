@@ -103,11 +103,11 @@ def menuitem(text,link,datatype):
     #print (datatype)
     return """<li><a href="{link}"><i class="fa fa-{datatype} "></i>{text}</a></li>""".format(text=text,link=link,datatype=geticon(datatype))
 
-def makeSubNodelist(subnode,lang,getdatatype):
+def makeSubNodelist(subnode,lang,getdatatype,makeHTMLName):
     items=[]
     for node in subnode.get_next_nodes():
         if node.name[0]!="_":
-            items.append(menuitem(node.get_title(lang),node.path,getdatatype(node.path)))
+            items.append(menuitem(node.get_title(lang),makeHTMLName(node),getdatatype(node.path)))
     for node in subnode.get_next_subtree():
         #print(node,node.name)
         if node.name[0]!="_":

@@ -22,6 +22,10 @@ def getDataType(name):
             return typename
     return "other"
 
+def makeHTMLName(node):
+    "Get the link assotitated with the node (name.html)"
+    return os.path.splitext(node.name)[0]+".html"#splitext(node.name)[0:-1].join(os.filesep)
+
 def makeContainer(module,site,current_node,previous_node,lang):
     article_list=module.makeSubNodelist(site.tree,lang,getDataType)
     previous=module.menuitem(site.get_variable("previous",lang),previous_node.path,"previous")

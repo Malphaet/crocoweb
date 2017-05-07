@@ -214,6 +214,24 @@ class testModel(simple):
                 break
         if status:
             self.addSuccess()
+
+        self.currentTest("model:htmlpath")
+        class falseNode(object):
+            def __init__(self,name):
+                self.name=name
+
+        res=[model.makeHTMLName(falseNode("/bla/foo.bar")),model.makeHTMLName(falseNode("goo.foo.bar"))]
+        expected=["/bla/foo.html","goo.foo.html"]
+        success=True
+        for i in range(len(res)):
+            if res[i]!=expected[i]:
+                self.addFailure("malformed HTML names expected {} (got {})".format(expected[i],res[i]))
+                success=False
+                break
+
+        if success:
+            self.addSuccess()
+
         #
         # menu=model.makeContainer(dual,site,current_node,previous_node,lang)
         # data=model.makeData(dual,current_node,lang)
@@ -253,15 +271,17 @@ class testDual(simple):
         self.addSuccess()
 
         status=True
-        linkList=dual.makeSubNodelist(site.tree,"en",model.getDataType)
+        linkList=dual.makeSubNodelist(site.tree,"en",model.getDataType,model.makeHTMLName)
+        # print(site.tree.subtree["Poetry"]["*"].config_file)
         nominalLinkList=['<li><a href="index.html"><i class="fa fa-book "></i>Transaltionus</a></li>',
         '<li><a href="article1.html"><i class="fa fa-book "></i>First article</a></li>',
         '<li><a href="Poetry"><i class="fa fa-folder "></i>Poetry</a></li>']
         for i in range(len(nominalLinkList)):
             if linkList[i] not in nominalLinkList:
                 self.addFailure("link {} malformed (expected {})".format(i,nominalLinkList[i]),nonDestructive=True)
+                self.addFailure("                  (got      {})".format(linkList[i]),nonDestructive=True)
                 status=False
-                
+
         if status:
             self.addSuccess()
 

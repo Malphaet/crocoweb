@@ -88,8 +88,10 @@ class WebSubTree(WebTree):
     def get_config(self):
         "Try to init a config, if not just use an empty variable set"
         try:
-            super.get_config(self)
+            WebTree.get_config(self)
+            #self.get_config() # It does make more sense to have your own no ?
         except:
+            #print("Can't find config")
             self.variables={}
 
     def make_tree(self):
