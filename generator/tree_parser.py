@@ -101,6 +101,7 @@ class WebSubTree(WebTree):
         self.subtree={}
         self.nodes={}
 
+        # This generator is deeply flawed, and should create temp nodes every time it meets a _lang folder then split from it
         for f in os.listdir(self.full_path):
             name=os.path.join(self.full_path,f)
             path=os.path.join(self.path,f)
@@ -129,7 +130,7 @@ class WebSubTree(WebTree):
                 return self.nodes[name]
             if filter_lang in self.nodes[name]:
                 return self.nodes[name][filter_lang]
-            return self.nodes[name]["*"] # specific language unavailable, all languages returned, better luck here
+            return self.nodes[name]["*"] # Specific language unavailable, all languages returned, better luck here
         raise IndexError("The node "+name+" doesn't exist")
 
     def get_next_subtree(self,filter_lang="*"):
@@ -144,6 +145,7 @@ class WebSubTree(WebTree):
                 return self.subtree[name]
             if filter_lang in self.subtree[name]:
                 return self.subtree[name][filter_lang]
+            #print self.subtree[name]
             return self.subtree[name]["*"] # specific language unavailable, all languages returned, better luck here
         raise IndexError("The tree "+subtree+" doesn't exist")
 
@@ -196,9 +198,17 @@ class WebNode(WebSubTree):
     def get_content(self,filter_lang):
         """Output the content of the node, in the correct language
         (note that you shouldn't ask directly a node for it's content, rather a Subtree for a node in the correct language)"""
-        if filter_lang in self.content:
+        try:
             return self.content[filter_lang]
-        return self.content["*"]
+        except KeyError:
+            if "*" in self.content:
+                return self.content["*"]
+            else:
+                return ""
+            # if I'm asking for "*" am I asking for ANY lang or EVERY lang or ONLY "*" ?
+            # for now this code will return ONLY the common part aka "*" and return an empty string if there is no common part
+        except:
+            raise KeyError("Can't access lang ({}) in node ({})".format(filter_lang,self))
 
 def makeWebsite(website):
     "Take a string of the folder name containing the website, will proceed to generate all needed Objects and return the Webtree"
