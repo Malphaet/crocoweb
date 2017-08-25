@@ -88,6 +88,9 @@ def content(content="\{content\}",title="\{title\}"):
         <hr />
     </div>""".format(content=content,title=title)
 
+def mix_data(list_of_data):
+    return "<table><tr><td>"+"</td><td>".join(list_of_data)+"</td></tr></table>"
+
 # Inner functions
 icons={"image":"picture-o","audio":"music","text":"book","video":"film","folder":"folder","other":"file","previous":"arrow-left"} #"gear":"gear","edit":"edit"
 

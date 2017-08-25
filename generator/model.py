@@ -32,11 +32,16 @@ def makeContainer(module,site,current_node,previous_node,lang):
     menu=module.menu(previous=previous,menulist="\n".join(article_list),articles=site.get_variable("articles",lang))
     return menu
 
+def makeAllData(module,list_of_data):
+    "To be deleted iframes&post merging seems better"
+    return module.mix_data(list_of_data)
+
 def makeData(module,current_node,lang):
     return module.content(content=current_node.get_content(lang),title=current_node.get_one(["article_title",'title',"article_name","name"],lang))
 
 def makePage(module,site,lang,menu,data):
-    return module.container(pagetitle=site.get_title(lang),websitename=site.get_one(['websitename',"webtitle","name","title"],"fr"),menu=menu,page=data)
+    return module.container(pagetitle=site.get_title(lang),websitename=site.get_one(['websitename',"webtitle","name","title"],lang),menu=menu,page=data)
+
 
 if __name__ == '__main__':
     site=makeWebsite("sites/example_website")
