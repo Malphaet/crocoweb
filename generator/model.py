@@ -27,15 +27,18 @@ def makeHTMLName(node):
     return os.path.splitext(node.name)[0]+".html"#splitext(node.name)[0:-1].join(os.filesep)
 
 def makeContainer(module,site,current_node,previous_node,lang):
-    article_list=module.makeSubNodelist(site.tree,lang,getDataType)
+    article_list=module.makeSubNodelist(site.tree,lang,getDataType,makeHTMLName)
     previous=module.menuitem(site.get_variable("previous",lang),previous_node.path,"previous")
     menu=module.menu(previous=previous,menulist="\n".join(article_list),articles=site.get_variable("articles",lang))
     return menu
 
 def makeAllData(module,list_of_data):
-    "To be deleted iframes&post merging seems better"
+    "Obsolete, use makeiFrame instead"
     return module.mix_data(list_of_data)
 
+def makeiFrame(node):
+    return ""
+    
 def makeData(module,current_node,lang):
     return module.content(content=current_node.get_content(lang),title=current_node.get_one(["article_title",'title',"article_name","name"],lang))
 
