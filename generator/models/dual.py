@@ -78,7 +78,13 @@ def menu(previous="",menulist="\{menulist\}",articles="#_articles_#",depth=""):
     """.format(previous=previous,menulist=menulist,articles=articles,depth=depth)
 
 def content(content="\{content\}",title="\{title\}"):
-    return """<div id="page-inner">
+    return """<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- GOOGLE FONTS-->
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+    </head>
+    <body><div id="page-inner">
         <div class="row">
             <div class="col-md-12">
                 <h2>{title}</h2>
@@ -86,12 +92,13 @@ def content(content="\{content\}",title="\{title\}"):
             </div>
         </div>
         <hr />
-    </div>""".format(content=content,title=title)
+    </div></body>""".format(content=content,title=title)
 
 def iframe(list_of_pages):
     iframes=""
+    percent=round(100/len(list_of_pages))
     for page in list_of_pages:
-        iframes+="<iframe src={} width='50%' height='500px'>Iframes not supported</iframe>".format(page)
+        iframes+="<iframe src={} width='{}%' height='500px'>Iframes not supported</iframe>".format(page,percent)
     return iframes
 
 def assets():
