@@ -117,11 +117,12 @@ def menuitem(text,link,datatype):
 
 def makeSubNodelist(subnode,lang,getdatatype,makeHTMLName):
     items=[]
-    for node in subnode.get_next_nodes():
-        if node.name[0]!="_":
-            items.append(menuitem(node.get_title(lang),makeHTMLName(node.name),getdatatype(node.path)))
-    for node in subnode.get_next_subtree():
-        #print(node,node.name)
-        if node.name[0]!="_":
-            items.append(menuitem(node.get_title(lang),node.path,"folder"))
+    for node in subnode.get_next_nodes(lang):
+        name=os.path.basename(node.name)
+        if name[0]!="_":
+            items.append(menuitem(node.get_title(lang),makeHTMLName(name),getdatatype(node.path)))
+    for node in subnode.get_next_subtree(lang):
+        name=os.path.basename(node.name)
+        if name[0]!="_":
+            items.append(menuitem(node.get_title(lang),name+"/"+makeHTMLName("index"),"folder"))
     return items

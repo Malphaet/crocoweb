@@ -27,7 +27,7 @@ def makeHTMLName(text):
     return os.path.splitext(text)[0]+".html"#splitext(node.name)[0:-1].join(os.filesep)
 
 def makeContainer(module,site,current_node,previous_node,lang,makeHTMLName=makeHTMLName,depth=""):
-    article_list=module.makeSubNodelist(site.tree,lang,getDataType,makeHTMLName)
+    article_list=module.makeSubNodelist(current_node.parent_node,lang,getDataType,makeHTMLName)
     if previous_node==None:
         previous=""
     else:

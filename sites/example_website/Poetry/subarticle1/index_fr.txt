@@ -1,4 +1,4 @@
-title_fr: Poésie
+title_fr: Sous articulation
 category_fr: Subologie
 author_: Max
 
