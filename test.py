@@ -220,7 +220,7 @@ class testModel(simple):
             def __init__(self,name):
                 self.name=name
 
-        res=[model.makeHTMLName(falseNode("/bla/foo.bar")),model.makeHTMLName(falseNode("goo.foo.bar"))]
+        res=[model.makeHTMLName(falseNode("/bla/foo.bar").name),model.makeHTMLName(falseNode("goo.foo.bar").name)]
         expected=["/bla/foo.html","goo.foo.html"]
         success=True
         for i in range(len(res)):
@@ -275,7 +275,7 @@ class testDual(simple):
         # print(site.tree.subtree["Poetry"]["*"].config_file)
         nominalLinkList=['<li><a href="index.html"><i class="fa fa-book "></i>Transaltionus</a></li>',
         '<li><a href="article1.html"><i class="fa fa-book "></i>First article</a></li>',
-        '<li><a href="Poetry"><i class="fa fa-folder "></i>Poetry</a></li>']
+        '<li><a href="Poetry/index.html"><i class="fa fa-folder "></i>Poetry</a></li>']
         for i in range(len(nominalLinkList)):
             if linkList[i] not in nominalLinkList:
                 self.addFailure("link {} malformed (expected {})".format(i,nominalLinkList[i]),nonDestructive=True)
