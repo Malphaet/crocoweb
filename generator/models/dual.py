@@ -1,6 +1,6 @@
 import os
 
-def container(pagetitle="#_pagetitle_#",websitename="#_websitename_#",menu="\{menu\}",page="\{page\}"):
+def container(pagetitle="#_pagetitle_#",websitename="#_websitename_#",menu="\{menu\}",page="\{page\}",depth=""):
     "Return the global appearance of the website"
     return """<!DOCTYPE html>
     <html xmlns="http://www.w3.org/1999/xhtml">
@@ -9,11 +9,11 @@ def container(pagetitle="#_pagetitle_#",websitename="#_websitename_#",menu="\{me
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{pagetitle}</title>
         <!-- BOOTSTRAP STYLES-->
-        <link href="assets/css/bootstrap.css" rel="stylesheet" />
+        <link href="{depth}assets/css/bootstrap.css" rel="stylesheet" />
         <!-- FONTAWESOME STYLES-->
-        <link href="assets/css/font-awesome.css" rel="stylesheet" />
+        <link href="{depth}assets/css/font-awesome.css" rel="stylesheet" />
         <!-- CUSTOM STYLES-->
-        <link href="assets/css/custom.css" rel="stylesheet" />
+        <link href="{depth}assets/css/custom.css" rel="stylesheet" />
         <!-- GOOGLE FONTS-->
         <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
     </head>
@@ -53,21 +53,21 @@ def container(pagetitle="#_pagetitle_#",websitename="#_websitename_#",menu="\{me
     <!-- /. WRAPPER  -->
     <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
     <!-- JQUERY SCRIPTS -->
-    <script src="assets/js/jquery-1.10.2.js"></script>
+    <script src="{depth}assets/js/jquery-1.10.2.js"></script>
     <!-- BOOTSTRAP SCRIPTS -->
-    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="{depth}assets/js/bootstrap.min.js"></script>
     <!-- METISMENU SCRIPTS -->
-    <script src="assets/js/jquery.metisMenu.js"></script>
+    <script src="{depth}assets/js/jquery.metisMenu.js"></script>
     <!-- CUSTOM SCRIPTS -->
-    <script src="assets/js/custom.js"></script>
+    <script src="{depth}assets/js/custom.js"></script>
     </body>
-    </html>""".format(MENU=menu,PAGE=page,websitename=websitename,pagetitle=pagetitle)
+    </html>""".format(MENU=menu,PAGE=page,websitename=websitename,pagetitle=pagetitle,depth=depth)
 
 
-def menu(previous="",menulist="\{menulist\}",articles="#_articles_#"):
+def menu(previous="",menulist="\{menulist\}",articles="#_articles_#",depth=""):
     "Return the menu list"
     return """<li class="text-center user-image-back">
-        <img src="assets/img/logo.png" class="img-responsive" />
+        <img src="{depth}assets/img/logo.png" class="img-responsive" />
     </li>
     {previous}
     <li  class="active">
@@ -75,7 +75,7 @@ def menu(previous="",menulist="\{menulist\}",articles="#_articles_#"):
         <ul class="nav nav-second-level">
         {menulist}
         </ul>
-    """.format(previous=previous,menulist=menulist,articles=articles)
+    """.format(previous=previous,menulist=menulist,articles=articles,depth=depth)
 
 def content(content="\{content\}",title="\{title\}"):
     return """<div id="page-inner">

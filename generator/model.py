@@ -26,10 +26,10 @@ def makeHTMLName(node):
     "Get the link assotitated with the node (name.html)"
     return os.path.splitext(node.name)[0]+".html"#splitext(node.name)[0:-1].join(os.filesep)
 
-def makeContainer(module,site,current_node,previous_node,lang):
+def makeContainer(module,site,current_node,previous_node,lang,makeHTMLName=makeHTMLName,depth=""):
     article_list=module.makeSubNodelist(site.tree,lang,getDataType,makeHTMLName)
     previous=module.menuitem(site.get_variable("previous",lang),previous_node.path,"previous")
-    menu=module.menu(previous=previous,menulist="\n".join(article_list),articles=site.get_variable("articles",lang))
+    menu=module.menu(previous=previous,menulist="\n".join(article_list),articles=site.get_variable("articles",lang),depth=depth)
     return menu
 
 def makeAllData(module,list_of_data):
@@ -38,12 +38,12 @@ def makeAllData(module,list_of_data):
 
 def makeiFrame(node):
     return ""
-    
+
 def makeData(module,current_node,lang):
     return module.content(content=current_node.get_content(lang),title=current_node.get_one(["article_title",'title',"article_name","name"],lang))
 
-def makePage(module,site,lang,menu,data):
-    return module.container(pagetitle=site.get_title(lang),websitename=site.get_one(['websitename',"webtitle","name","title"],lang),menu=menu,page=data)
+def makePage(module,site,lang,menu,data,depth):
+    return module.container(pagetitle=site.get_title(lang),websitename=site.get_one(['websitename',"webtitle","name","title"],lang),menu=menu,page=data,depth=depth)
 
 
 if __name__ == '__main__':
@@ -53,10 +53,10 @@ if __name__ == '__main__':
     current_node=site.tree.get_node("index",lang)
     previous_node=site.tree.get_node("index",lang)
 
-    menu=makeContainer(dual,site,current_node,previous_node,lang)
+    menu=makeContainer(dual,site,current_node,previous_node,lang,depth="")
     data=makeData(dual,current_node,lang)
 
-    page=makePage(dual,site,lang,menu,data)
+    page=makePage(dual,site,lang,menu,data,depth="")
     with open("site_base/dual/test.html","w+") as f:
         f.write(page)
     print(page)
