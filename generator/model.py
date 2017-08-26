@@ -29,15 +29,15 @@ def makeHTMLName(node):
 def makeContainer(module,site,current_node,previous_node,lang,makeHTMLName=makeHTMLName,depth=""):
     article_list=module.makeSubNodelist(site.tree,lang,getDataType,makeHTMLName)
     previous=module.menuitem(site.get_variable("previous",lang),previous_node.path,"previous")
-    menu=module.menu(previous=previous,menulist="\n".join(article_list),articles=site.get_variable("articles",lang),depth=depth)
+    menu=module.menu(previous="../",menulist="\n".join(article_list),articles=site.get_variable("articles",lang),depth=depth)
     return menu
 
 def makeAllData(module,list_of_data):
     "Obsolete, use makeiFrame instead"
     return module.mix_data(list_of_data)
 
-def makeiFrame(node):
-    return ""
+def makeiFrame(module,list_of_nodes):
+    return module.iframe(list_of_nodes)
 
 def makeData(module,current_node,lang):
     return module.content(content=current_node.get_content(lang),title=current_node.get_one(["article_title",'title',"article_name","name"],lang))

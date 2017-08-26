@@ -91,7 +91,7 @@ def content(content="\{content\}",title="\{title\}"):
 def iframe(list_of_pages):
     iframes=""
     for page in list_of_pages:
-        iframes+="<iframe src={}>Iframes not supported</iframe>".format(page)
+        iframes+="<iframe src={} width='50%' height='500px'>Iframes not supported</iframe>".format(page)
     return iframes
 
 def mix_data(list_of_data):
