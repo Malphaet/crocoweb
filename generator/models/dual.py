@@ -1,6 +1,6 @@
 import os
 
-def container(pagetitle="#_pagetitle_#",websitename="#_websitename_#",menu="\{menu\}",page="\{page\}",depth=""):
+def container(pagetitle="#_pagetitle_#",websitename="#_websitename_#",menu="\{menu\}",page="\{page\}",langswitch="\{langswitch\}",depth=""):
     "Return the global appearance of the website"
     return """<!DOCTYPE html>
     <html xmlns="http://www.w3.org/1999/xhtml">
@@ -29,11 +29,9 @@ def container(pagetitle="#_pagetitle_#",websitename="#_websitename_#",menu="\{me
                         </button>
                         <a class="navbar-brand" href="#"><i class="fa fa-square-o "></i>&nbsp;{websitename}</a>
                     </div>
-                    <!-- <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#">Login</a></li>
-                </ul>
-            </div> -->
+                    <div class="navbar-collapse collapse">
+                        {langswitch}
+                    </div>
         </div>
     </div>
     <!-- /. NAV TOP  -->
@@ -61,7 +59,7 @@ def container(pagetitle="#_pagetitle_#",websitename="#_websitename_#",menu="\{me
     <!-- CUSTOM SCRIPTS -->
     <script src="{depth}assets/js/custom.js"></script>
     </body>
-    </html>""".format(MENU=menu,PAGE=page,websitename=websitename,pagetitle=pagetitle,depth=depth)
+    </html>""".format(MENU=menu,PAGE=page,websitename=websitename,pagetitle=pagetitle,depth=depth,langs="",langswitch=langswitch)
 
 
 def menu(previous="",menulist="\{menulist\}",articles="#_articles_#",depth=""):
@@ -121,6 +119,16 @@ def menuitem(text,link,datatype):
     "Generate a menu link"
     #print (datatype)
     return """<li><a href="{link}"><i class="fa fa-{datatype} "></i>{text}</a></li>""".format(text=text,link=link,datatype=geticon(datatype))
+
+def langselect(list_of_links,selected_lang):
+    links=""
+    for l,pagelink,lang_name in list_of_links:
+        if l==selected_lang:
+            style="class=\"btn btn-default\""
+        else:
+            style=""#"class=\"btn btn-default\""
+        links+="""<li><a {style} href="{pagelink}">{lang_name}</a></li>""".format(pagelink=pagelink,lang_name=lang_name,style=style)
+    return """<ul class="nav navbar-nav navbar-right">{}</ul>""".format(links)
 
 def makeSubNodelist(subnode,lang,getdatatype,makeHTMLName):
     items=[]

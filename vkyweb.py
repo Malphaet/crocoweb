@@ -35,14 +35,19 @@ def gen_all_nodes_menu(tree,lang,previous_node,depth):
     # TODO: look for index in all nodes, create it if needed
     for current_node in tree.get_next_nodes(lang):
         if (os.path.basename(current_node.name)[0]!="_"): #Likely add a visible: true/false tag in the future
-            filename=htmlNamer(current_node.name)
+            filename=htmlNamer[lang](current_node.name)
             if args.verbose:
-                print "Generating {} menus".format(filename)
+                print("Generating {} menus".format(filename))
             save=savePath(filename)
 
-            menu=model.makeContainer(choosen_model,website,current_node,previous_node,lang,htmlNamer,depth)
+            list_of_lang=[]
+            for l in args.l:
+                list_of_lang.append((l,htmlNamer[l](os.path.basename(current_node.name)),tree.get_variable(l,lang).capitalize()))
+
+            langswitch=model.makeLangSwitch(choosen_model,list_of_lang,lang)
+            menu=model.makeContainer(choosen_model,website,current_node,previous_node,lang,htmlNamer[lang],depth,langswitch)
             frames=model.makeiFrame(choosen_model,iFrameFromNode(current_node))
-            page=model.makePage(choosen_model,website,lang,menu,frames,depth)
+            page=model.makePage(choosen_model,website,lang,menu,frames,depth,langswitch)
 
             saveData(save,page)
     depth="../"+depth
@@ -50,9 +55,9 @@ def gen_all_nodes_menu(tree,lang,previous_node,depth):
         previous_node=new
         try:
             if args.verbose:
-                print("Creating folder [{}]".format(new.path))
+                print("Creating folder [{}]".format(new.name))
             if not args.dry:
-                os.makedirs(savePath(new.path))
+                os.makedirs(savePath(new.name))
         except OSError:
             pass
         gen_all_nodes_menu(new,lang,previous_node,depth)
@@ -119,8 +124,12 @@ if not args.dry:
 if args.verbose:
     print("Website will be generated in {} at {}".format(args.l,args.d))
 
+htmlNamer={}
+for l in args.l:
+    htmlNamer[l]=HTMLNameCreator(l,args.extension)
+
 for lang in args.l: #Generate every page in .lang.html (with both contents)
-    htmlNamer=HTMLNameCreator(lang,args.extension)
+    #htmlNamer=HTMLNameCreator(lang,args.extension)
     htmlContentNamer=HTMLNameCreator("content_"+lang,args.extension)
     previous_node=None#website.tree.get_node("index",lang)
     gen_all_nodes_menu(website.tree,lang,previous_node=None,depth="")

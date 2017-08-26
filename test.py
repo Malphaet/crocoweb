@@ -145,7 +145,7 @@ class testTree(simple):
 
 
         self.currentTest("tree:name")
-        if webt.name!="_config.txt":
+        if webt.name!="": # Not sure it's the best practice, but it's supposed to be like that
             self.addFailure("malformed name"+webt.name)
         else:
             self.addSuccess()
@@ -284,6 +284,14 @@ class testDual(simple):
 
         if status:
             self.addSuccess()
+
+        self.currentTest("dual:langselect")
+        dual_select=dual.langselect([("en","index_en.html","english"),('fr',"index_fr.html","french")],"en")
+        nominalselect="""<ul class="nav navbar-nav navbar-right"><li><a  href="index_en.html">english</a></li><li><a  href="index_fr.html">french</a></li></ul>"""
+        if dual_select==nominalselect:
+            self.addSuccess()
+        else:
+            self.addFailure("links malformed (expected {})".format(nominalselect))
 
     def testThisDictOnDis(self,name,testDict,testFunction,returnType=str,returnDict=None):
         res=testFunction(**testDict)

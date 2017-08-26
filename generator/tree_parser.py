@@ -45,7 +45,7 @@ class WebTree(object):
         self.config_path=os.path.join(self.website_path,self.path,"_config.txt")
         self.config_file=file_parser.parse_file(self.config_path)
         self.variables=self.config_file.variables
-        self.name=self.config_file.name #Should actually, rename the file to allow customs names in _config
+        self.name=self.path.split("_")[0]#self.config_file.name #Should actually, rename the file to allow customs names in _config
 
     def get_variable(self,varname,filter_lang="*"):
         "Get the corresponding variable"
@@ -76,7 +76,7 @@ class WebSubTree(WebTree):
         self.subtree={}
         self.nodes={}
         WebTree.__init__(self,website_path,path)
-        self.name=os.path.split(path)[-1]
+        #self.name=os.path.split(path)[-1]
 
     def get_variable(self,varname,filter_lang):
         "Get the variable, either in it's config or one of the above"
@@ -105,15 +105,18 @@ class WebSubTree(WebTree):
         for f in os.listdir(self.full_path):
             name=os.path.join(self.full_path,f)
             path=os.path.join(self.path,f)
+            #print self.name
             if os.path.isdir(name):
                 var,lang=file_parser.create_lang(f)
                 new=WebSubTree(self.website_path,path)
                 new.parent_node=self
+                new.name=os.path.join(self.name,var) # Attempt to fix
                 self.subtree=file_parser.add_to_table(var,lang,new,self.subtree)
             else:
                 var,lang=file_parser.create_lang(os.path.splitext(f)[0])
                 new=WebNode(self.website_path,path)
                 new.parent_node=self
+                new.name=os.path.join(self.name,var)
                 self.nodes=file_parser.add_to_table(var,lang,new,self.nodes)
         #print( self, self.subtree)
         #print( self.nodes)

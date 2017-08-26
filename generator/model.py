@@ -26,7 +26,7 @@ def makeHTMLName(text):
     "Get the link assotitated with the node (name.html)"
     return os.path.splitext(text)[0]+".html"#splitext(node.name)[0:-1].join(os.filesep)
 
-def makeContainer(module,site,current_node,previous_node,lang,makeHTMLName=makeHTMLName,depth=""):
+def makeContainer(module,site,current_node,previous_node,lang,makeHTMLName=makeHTMLName,depth="",langswitch=""):
     article_list=module.makeSubNodelist(current_node.parent_node,lang,getDataType,makeHTMLName)
     if previous_node==None:
         previous=""
@@ -45,8 +45,11 @@ def makeiFrame(module,list_of_nodes):
 def makeData(module,current_node,lang):
     return module.content(content=current_node.get_content(lang),title=current_node.get_one(["article_title",'title',"article_name","name"],lang))
 
-def makePage(module,site,lang,menu,data,depth):
-    return module.container(pagetitle=site.get_title(lang),websitename=site.get_one(['websitename',"webtitle","name","title"],lang),menu=menu,page=data,depth=depth)
+def makePage(module,site,lang,menu,data,depth,langswitch):
+    return module.container(pagetitle=site.get_title(lang),websitename=site.get_one(['websitename',"webtitle","name","title"],lang),menu=menu,page=data,depth=depth,langswitch=langswitch)
+
+def makeLangSwitch(module,list_of_lang,selected_lang):
+    return module.langselect(list_of_lang,selected_lang)
 
 def pathAssets(module):
     return module.assets()
@@ -58,7 +61,7 @@ if __name__ == '__main__':
     current_node=site.tree.get_node("index",lang)
     previous_node=site.tree.get_node("index",lang)
 
-    menu=makeContainer(dual,site,current_node,previous_node,lang,depth="")
+    menu=makeContainer(dual,site,current_node,previous_node,lang,depth="",langswitch="")
     data=makeData(dual,current_node,lang)
 
     page=makePage(dual,site,lang,menu,data,depth="")

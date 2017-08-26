@@ -133,7 +133,7 @@ def parse_file(file_name):
                 beg_lang,end_lang,text=match.groups()
                 page_text=[]
 
-                if beg_lang: #Will now add a lang to witch the programe should write
+                if beg_lang: #Will now add a lang to witch the program should write
                     if beg_lang in used_langs:
                         used_langs[beg_lang]+=1
                     else:
