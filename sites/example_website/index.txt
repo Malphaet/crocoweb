@@ -22,7 +22,7 @@ Loreme ipsume dolore site amete, consecteture adipisicinge elite, sede doe eiusm
 __/fr__
 
 __*__
-![Alt text](/path/to/img.jpg)
+![Alt text](./assets/img/logo.png)
 __/*__
 
 __hidden__

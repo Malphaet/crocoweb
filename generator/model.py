@@ -1,7 +1,7 @@
 # Copyleft (c) 2016 Cocobug All Rights Reserved.
-# coding=utf-8
+# -*- coding: utf_8 -*-
 
-import re,traceback,os
+import re,traceback,os,markdown
 
 try:
     from tree_parser import *
@@ -43,7 +43,8 @@ def makeiFrame(module,list_of_nodes):
     return module.iframe(list_of_nodes)
 
 def makeData(module,current_node,lang):
-    return module.content(content=current_node.get_content(lang),title=current_node.get_one(["article_title",'title',"article_name","name"],lang))
+    content=markdown.markdown(unicode(current_node.get_content(lang).decode("utf-8")))
+    return module.content(content=content.encode('utf-8'),title=current_node.get_one(["article_title",'title',"article_name","name"],lang))
 
 def makePage(module,site,lang,menu,data,depth,langswitch):
     return module.container(pagetitle=site.get_title(lang),websitename=site.get_one(['websitename',"webtitle","name","title"],lang),menu=menu,page=data,depth=depth,langswitch=langswitch)

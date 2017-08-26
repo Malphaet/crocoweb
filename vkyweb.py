@@ -1,8 +1,9 @@
 #!/usr/bin/env python
+# -*- coding: utf_8 -*-
 
 # Copyleft (c) 2016 Cocobug All Rights Reserved.
 
-import argparse,os,sys,shutil
+import argparse,os,sys,shutil,markdown
 from generator import *
 choosen_model=models.dual
 
@@ -67,7 +68,7 @@ def gen_all_nodes_content(tree,lang):
         if (os.path.basename(current_node.name)[0]!="_"): #Likely add a visible: true/false tag in the future
             file_name=htmlContentNamer(current_node.name)
             if args.verbose:
-                print "Generating [{}]: content".format(file_name)
+                print("Generating [{}]: content".format(file_name))
             save=savePath(file_name)
             content=model.makeData(choosen_model,current_node,lang)
 

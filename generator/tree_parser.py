@@ -1,4 +1,6 @@
 # Copyleft (c) 2016 Cocobug All Rights Reserved.
+# -*- coding: utf_8 -*-
+
 import os,sys
 
 try:

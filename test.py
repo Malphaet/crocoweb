@@ -1,4 +1,5 @@
 # Copyleft (c) 2016 Cocobug All Rights Reserved.
+# -*- coding: utf_8 -*-
 
 from minitest import minitest
 

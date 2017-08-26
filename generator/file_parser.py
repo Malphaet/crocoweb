@@ -1,8 +1,7 @@
 # Copyleft (c) 2016 Cocobug All Rights Reserved.
-# coding=utf-8
+# -*- coding: utf_8 -*-
 
-
-import os,sys
+import os,sys,codecs
 import re
 import traceback
 
