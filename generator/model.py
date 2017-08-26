@@ -22,14 +22,17 @@ def getDataType(name):
             return typename
     return "other"
 
-def makeHTMLName(node):
+def makeHTMLName(text):
     "Get the link assotitated with the node (name.html)"
-    return os.path.splitext(node.name)[0]+".html"#splitext(node.name)[0:-1].join(os.filesep)
+    return os.path.splitext(text)[0]+".html"#splitext(node.name)[0:-1].join(os.filesep)
 
 def makeContainer(module,site,current_node,previous_node,lang,makeHTMLName=makeHTMLName,depth=""):
     article_list=module.makeSubNodelist(site.tree,lang,getDataType,makeHTMLName)
-    previous=module.menuitem(site.get_variable("previous",lang),previous_node.path,"previous")
-    menu=module.menu(previous="../",menulist="\n".join(article_list),articles=site.get_variable("articles",lang),depth=depth)
+    if previous_node==None:
+        previous=""
+    else:
+        previous=module.menuitem(site.get_variable("previous",lang),"../"+makeHTMLName("index"),"previous")
+    menu=module.menu(previous=previous,menulist="\n".join(article_list),articles=site.get_variable("articles",lang),depth=depth)
     return menu
 
 def makeAllData(module,list_of_data):
@@ -45,6 +48,8 @@ def makeData(module,current_node,lang):
 def makePage(module,site,lang,menu,data,depth):
     return module.container(pagetitle=site.get_title(lang),websitename=site.get_one(['websitename',"webtitle","name","title"],lang),menu=menu,page=data,depth=depth)
 
+def pathAssets(module):
+    return module.assets()
 
 if __name__ == '__main__':
     site=makeWebsite("sites/example_website")

@@ -2,13 +2,14 @@
 
 # Copyleft (c) 2016 Cocobug All Rights Reserved.
 
-import argparse,os,sys
+import argparse,os,sys,shutil
 from generator import *
 choosen_model=models.dual
 
 def saveData(path,data):
-    with open(path,"w+") as f:
-        f.write(data)
+    if not args.dry:
+        with open(path,"w+") as f:
+            f.write(data)
 
 def savePath(path):
     return os.path.join(save_path,path)
@@ -18,23 +19,23 @@ def saveMenus():
 
 def HTMLNameCreator(lang,ext="html"):
     ext,lang=ext,lang
-    def makeHTMLName(node):
-        return "{}_{}.{}".format(node.name,lang,ext)
+    def makeHTMLName(text):
+        return "{}_{}.{}".format(os.path.splitext(text)[0],lang,ext)
     return makeHTMLName
 
 def iFrameFromNode(node):
     "Return the list of pages that should be in the frames"
     names=[]
     for l in args.l:
-        names.append(os.path.basename(HTMLNameCreator("content_"+l,ext=args.extension)(node)))
+        names.append(os.path.basename(HTMLNameCreator("content_"+l,ext=args.extension)(node.name)))
     return names
 
-def gen_all_nodes_menu(tree,lang,depth):
-    previous_node=tree #maybe need to be sent via parameter, nonetheless very secondary
+def gen_all_nodes_menu(tree,lang,previous_node,depth):
+    #previous_node=tree.parent_node #maybe need to be sent via parameter, nonetheless very secondary
     # TODO: look for index in all nodes, create it if needed
     for current_node in tree.get_next_nodes(lang):
         if (os.path.basename(current_node.name)[0]!="_"): #Likely add a visible: true/false tag in the future
-            filename=htmlNamer(current_node)
+            filename=htmlNamer(current_node.name)
             if args.verbose:
                 print "Generating {} menus".format(filename)
             save=savePath(filename)
@@ -46,23 +47,26 @@ def gen_all_nodes_menu(tree,lang,depth):
             saveData(save,page)
     depth="../"+depth
     for new in tree.get_next_subtree(lang):
+        previous_node=new
         try:
             if args.verbose:
-                print("Creating {}".format(new.path))
-            os.makedirs(savePath(new.path))
+                print("Creating folder [{}]".format(new.path))
+            if not args.dry:
+                os.makedirs(savePath(new.path))
         except OSError:
             pass
-        gen_all_nodes_menu(new,lang,depth)
+        gen_all_nodes_menu(new,lang,previous_node,depth)
 
 def gen_all_nodes_content(tree,lang):
     for current_node in tree.get_next_nodes(lang):
-        file_name=htmlContentNamer(current_node)
-        if args.verbose:
-            print "Generating {} content".format(file_name)
-        save=savePath(file_name)
-        content=model.makeData(choosen_model,current_node,lang)
+        if (os.path.basename(current_node.name)[0]!="_"): #Likely add a visible: true/false tag in the future
+            file_name=htmlContentNamer(current_node.name)
+            if args.verbose:
+                print "Generating [{}]: content".format(file_name)
+            save=savePath(file_name)
+            content=model.makeData(choosen_model,current_node,lang)
 
-        saveData(save,content)
+            saveData(save,content)
 
     for t in tree.get_next_subtree(lang):
         gen_all_nodes_content(t,lang)
@@ -96,8 +100,17 @@ save_path=args.d #Directly in the dest folder, no meta folder created !
 if not args.dry:
     try:
         if args.verbose:
-            print("Creating {}".save_path)
+            print("Creating folder [{}]".format(save_path))
         os.makedirs(save_path)
+    except OSError:
+        pass
+
+# Copying the assets if needed
+if not args.dry:
+    try:
+        if args.verbose:
+            print("Copying assets folder [{}] to [{}]".format(model.pathAssets(choosen_model),os.path.join(save_path,"assets")))
+        shutil.copytree(model.pathAssets(choosen_model),os.path.join(save_path,"assets"))
     except OSError:
         pass
 #website.print_webtree(lang="fr",prefix=" * ")
@@ -109,8 +122,8 @@ if args.verbose:
 for lang in args.l: #Generate every page in .lang.html (with both contents)
     htmlNamer=HTMLNameCreator(lang,args.extension)
     htmlContentNamer=HTMLNameCreator("content_"+lang,args.extension)
-    previous_node=website.tree.get_node("index",lang)
-    gen_all_nodes_menu(website.tree,lang,depth="")
+    previous_node=None#website.tree.get_node("index",lang)
+    gen_all_nodes_menu(website.tree,lang,previous_node=None,depth="")
     gen_all_nodes_content(website.tree,lang)
 
     #for tree in website.tree.get_next_subtree():

@@ -94,6 +94,9 @@ def iframe(list_of_pages):
         iframes+="<iframe src={} width='50%' height='500px'>Iframes not supported</iframe>".format(page)
     return iframes
 
+def assets():
+    return "site_base/dual/assets"
+
 def mix_data(list_of_data):
     return "<table><tr><td>"+"</td><td>".join(list_of_data)+"</td></tr></table>"
 
@@ -116,7 +119,7 @@ def makeSubNodelist(subnode,lang,getdatatype,makeHTMLName):
     items=[]
     for node in subnode.get_next_nodes():
         if node.name[0]!="_":
-            items.append(menuitem(node.get_title(lang),makeHTMLName(node),getdatatype(node.path)))
+            items.append(menuitem(node.get_title(lang),makeHTMLName(node.name),getdatatype(node.path)))
     for node in subnode.get_next_subtree():
         #print(node,node.name)
         if node.name[0]!="_":
