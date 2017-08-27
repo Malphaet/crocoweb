@@ -31,8 +31,11 @@ def iFrameFromNode(node):
 def gen_all_nodes_menu(tree,lang,previous_node,depth):
     #previous_node=tree.parent_node #maybe need to be sent via parameter, nonetheless very secondary
     # TODO: look for index in all nodes, create it if needed
+    
     for current_node in tree.get_next_nodes(lang):
-        if (os.path.basename(current_node.name)[0]!="_"): #Likely add a visible: true/false tag in the future
+        shortName=os.path.basename(current_node.name)
+
+        if (shortName[0]!="_"): #Likely add a visible: true/false tag in the future
             filename=htmlNamer[lang](current_node.name)
             if args.verbose:
                 print("Generating {} menus".format(filename))
@@ -40,7 +43,7 @@ def gen_all_nodes_menu(tree,lang,previous_node,depth):
 
             list_of_lang=[]
             for l in args.l:
-                list_of_lang.append((l,htmlNamer[l](os.path.basename(current_node.name)),tree.get_variable(l,lang).capitalize()))
+                list_of_lang.append((l,htmlNamer[l](shortName),tree.get_variable(l,lang).capitalize()))
 
             langswitch=model.makeLangSwitch(choosen_model,list_of_lang,lang)
             menu=model.makeContainer(choosen_model,website,current_node,previous_node,lang,htmlNamer[lang],depth,langswitch)
@@ -48,6 +51,7 @@ def gen_all_nodes_menu(tree,lang,previous_node,depth):
             page=model.makePage(choosen_model,website,lang,menu,frames,depth,langswitch)
 
             saveData(save,page)
+
     depth="../"+depth
     for new in tree.get_next_subtree(lang):
         previous_node=new

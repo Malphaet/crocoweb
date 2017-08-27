@@ -98,7 +98,7 @@ def iframe(list_of_pages):
     iframes=""
     percent=round(100/len(list_of_pages))
     for page in list_of_pages:
-        iframes+="<iframe src={} width='{}%' height='500px'>Iframes not supported</iframe>".format(page,percent)
+        iframes+="<iframe src={} width='{}%' height='1200px' frameborder='0'>Iframes not supported</iframe>".format(page,percent)
     return iframes
 
 def assets():

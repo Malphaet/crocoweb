@@ -360,7 +360,7 @@ class testDual(simple):
         else:
             self.addSuccess()
 
-        import os
+        impoe
         self.currentTest("dual:pathAssets")
         if os.path.exists(dual.assets()):
             self.addSuccess()

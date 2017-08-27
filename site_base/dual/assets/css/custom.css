@@ -7,10 +7,10 @@
 
     100% To use For Personal And Commercial Use.
     IN EXCHANGE JUST GIVE US CREDITS AND TELL YOUR FRIENDS ABOUT US
-   
+
     ========================================================  */
 /*==============================================
-    GENERAL  STYLES    
+    GENERAL  STYLES
     =============================================*/
 body {
     font-family: 'Open Sans', sans-serif;
@@ -25,7 +25,7 @@ body {
     padding: 15px 15px;
     min-height: 600px;
     background:#F3F3F3;
-   
+
 }
 #page-inner {
     width:100%;
@@ -48,7 +48,7 @@ text-transform: uppercase;
 padding-bottom:20px;
 }
 /*==============================================
-    MENU STYLES    
+    MENU STYLES
     =============================================*/
 
 
@@ -102,7 +102,7 @@ color:#0000FF;
 }
 .sidebar-collapse .nav > li > a:hover,
 .sidebar-collapse .nav > li > a:focus {
-	
+
 	background:#F3F3F3;
 	outline:0;
 }
@@ -117,7 +117,7 @@ color:#0000FF;
 .navbar-side {
 	border:none;
 	background-color: #202020;
-	
+
 }
 .navbar-inverse {
 background-color: #f3f3f3;
@@ -127,7 +127,7 @@ border-color: #D3D3D3;
 
 .navbar-default {
 border:0px solid #DDDDDD;
-     
+
 }
 .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
 background-color: #B40101;
@@ -167,7 +167,7 @@ background-color: #8B7BFF;
 }
 
 /*==============================================
-    DASHBOARD STYLES     
+    DASHBOARD STYLES
     =============================================*/
 
 .bg-color-blue {
@@ -184,7 +184,7 @@ border-top: 0px solid #fff;
 }
 
 /*==============================================
-    BOOTSTRAP STYLE CHANGES     
+    BOOTSTRAP STYLE CHANGES
     =============================================*/
 .nav-tabs > li > a {
      -webkit-border-radius: 0px 0px 0px 0px;
@@ -203,8 +203,8 @@ border-radius: 0px;
 -moz-border-radius: 0px;
 }
 .panel-heading {
- border-top-left-radius: 0px; 
- border-top-right-radius: 0px; 
+ border-top-left-radius: 0px;
+ border-top-right-radius: 0px;
 }
 .btn {
      border-radius: 0px;
@@ -217,18 +217,18 @@ border-radius: 0px;
 -moz-border-radius: 0px;
 }
 /*==============================================
-    MEDIA QUERIES     
+    MEDIA QUERIES
     =============================================*/
- 
+
  @media(min-width:768px) {
      #page-wrapper{
                margin: 0 0 0 260px;
         padding: 15px 30px;
         min-height: 1200px;
-		
+
     }
-	
-	
+
+
     .navbar-side {
         z-index: 1;
         position: absolute;
@@ -236,9 +236,7 @@ border-radius: 0px;
     }
 
    .navbar {
- border-radius: 0px; 
-}
-   
+ border-radius: 0px;
 }
 
-
+}
