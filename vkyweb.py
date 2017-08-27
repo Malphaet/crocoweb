@@ -15,9 +15,6 @@ def saveData(path,data):
 def savePath(path):
     return os.path.join(save_path,path)
 
-def saveMenus():
-    pass
-
 def HTMLNameCreator(lang,ext="html"):
     ext,lang=ext,lang
     def makeHTMLName(text):
@@ -119,7 +116,6 @@ if not args.dry:
         shutil.copytree(model.pathAssets(choosen_model),os.path.join(save_path,"assets"))
     except OSError:
         pass
-#website.print_webtree(lang="fr",prefix=" * ")
 
 # Walk & generate
 if args.verbose:
@@ -135,8 +131,3 @@ for lang in args.l: #Generate every page in .lang.html (with both contents)
     previous_node=None#website.tree.get_node("index",lang)
     gen_all_nodes_menu(website.tree,lang,previous_node=None,depth="")
     gen_all_nodes_content(website.tree,lang)
-
-    #for tree in website.tree.get_next_subtree():
-    #    previous_node=tree # For now, you can't get higher than index
-#for every lang, do a mix of print_webtree and makeContainer
-    #container=model.makeContainer(s)

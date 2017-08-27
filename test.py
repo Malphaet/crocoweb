@@ -1,20 +1,72 @@
 # Copyleft (c) 2016 Cocobug All Rights Reserved.
 # -*- coding: utf_8 -*-
 
-from minitest import minitest
+import sys
+try:
+    from blessings import Terminal
+except:
+    print ("You need to have blessings installed to run the test")
+    sys.exit()
 
+try:
+    from minitest import minitest
+except:
+    print ("You need to have minitest installed to run the test")
+    print ("the latest version of minitest should have been included with the vkyweb package")
+    sys.exit()
 import types
-from blessings import Terminal
 from generator import *
-
-
-#import vkyweb
 
 term=Terminal()
 unit=minitest.testUnit
 simple=minitest.simpleTestUnit
 group=minitest.testGroup
 dual=models.dual
+
+class testImports(simple):
+    def __init__(self,name):
+        super(testImports,self).__init__(name)
+
+    def _test_all(self):
+        self.currentTest("import:base/packages")
+        import argparse,os,sys,shutil,os,sys,codecs,re,traceback
+        self.addSuccess()
+
+        self.currentTest("import:markdown")
+        try:
+            import markdown
+            self.addSuccess()
+        except:
+            self.addFailure("cannot import module markdown",nonDestructive=True)
+            self.addFailure("markdown is now mandatory to parse files")
+
+        self.currentTest("import:generator")
+        import generator
+        self.addSuccess()
+
+        self.currentTest("import:generator:config")
+        from generator import config
+        self.addSuccess()
+
+        self.currentTest("import:generator:file_parser")
+        from generator import file_parser
+        self.addSuccess()
+
+        self.currentTest("import:generator:model")
+        from generator import model
+        self.addSuccess()
+
+        self.currentTest("import:generator:tree_parser")
+        from generator import tree_parser
+        self.addSuccess()
+
+        self.currentTest("import:generator:models")
+        from generator import models
+        self.addSuccess()
+
+        self.currentTest("import:generator:models:dual")
+        from generator.models import dual
+        self.addSuccess()
 
 class testParser(simple):
     """Testing the file parser"""
@@ -96,20 +148,23 @@ class testParser(simple):
 
         self.currentTest("parser_file")
         contentCheck={
-            'error':['![Alt text](/path/to/img.jpg)', "If you don't close properly something __a lot of content will be lost", '__in the generation', 'process', 'Like this']
-            ,"*":['![Alt text](/path/to/img.jpg)', 'Like this']
-            ,"en":['Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', '![Alt text](/path/to/img.jpg)', 'Like this']
-            ,"fr": ['Loreme ipsume dolore site amete, consecteture adipisicinge elite, sede doe eiusmode tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolore ine reprehenderite ine voluptate velite esse cillume dolore eu fugiatte nulla pariature. Excepteure sinte occaecate cupidatate none proidente, sunta ine culpa qui officia deserunte mollite anime ide est laborume.', '![Alt text](/path/to/img.jpg)', 'Like this']
-            ,"hidden":['![Alt text](/path/to/img.jpg)', 'Hiden text, can be used in many ways. Note that hidden is not a reserved keyword and is just treated separately in the generation process.', 'Like this']
-            ,"useless":['![Alt text](/path/to/img.jpg)', 'The useless keyword is not reserved either, and since it wont be treated in the generation process, it will just be lost', 'Like this']
+            'error':['![Alt text](./assets/img/logo.png)', "If you don't close properly something __a lot of content will be lost", '__in the generation', 'process', 'Like this']
+            ,"*":['![Alt text](./assets/img/logo.png)', 'Like this']
+            ,"en":['Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', '![Alt text](./assets/img/logo.png)', 'Like this']
+            ,"fr": ['Loreme ipsume dolore site amete, consecteture adipisicinge elite, sede doe eiusmode tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolore ine reprehenderite ine voluptate velite esse cillume dolore eu fugiatte nulla pariature. Excepteure sinte occaecate cupidatate none proidente, sunta ine culpa qui officia deserunte mollite anime ide est laborume.', '![Alt text](./assets/img/logo.png)', 'Like this']
+            ,"hidden":['![Alt text](./assets/img/logo.png)', 'Hiden text, can be used in many ways. Note that hidden is not a reserved keyword and is just treated separately in the generation process.', 'Like this']
+            ,"useless":['![Alt text](./assets/img/logo.png)', 'The useless keyword is not reserved either, and since it wont be treated in the generation process, it will just be lost', 'Like this']
         }
         self.addSuccess()
         for lang in contentCheck.keys():
             self.currentTest("parser_file:"+lang)
-            if contentCheck[lang]==[e for e in index.get_next_line(lang)]:
+            lines=[e for e in index.get_next_line(lang)]
+            if contentCheck[lang]==lines:
                 self.addSuccess()
             else:
-                self.addFailure("Error text doesn't match")
+                self.addFailure("Error text doesn't match",nonDestructive=True)
+                self.addFailure("    expected: {}".format(contentCheck[lang]),nonDestructive=True)
+                self.addFailure("         got: {}".format(lines))
 
 
 class testTree(simple):
@@ -236,7 +291,11 @@ class testModel(simple):
         #
         # menu=model.makeContainer(dual,site,current_node,previous_node,lang)
         # data=model.makeData(dual,current_node,lang)
-        #
+        # makeHTMLName(text)
+        # makeiFrame
+        # makeLangSwitch
+        # makeData
+        # pathAssets
         # page=model.makePage(dual,site,lang,menu,data)
         #print(page)
 
@@ -288,12 +347,25 @@ class testDual(simple):
 
         self.currentTest("dual:langselect")
         dual_select=dual.langselect([("en","index_en.html","english"),('fr',"index_fr.html","french")],"en")
-        nominalselect="""<ul class="nav navbar-nav navbar-right"><li><a  href="index_en.html">english</a></li><li><a  href="index_fr.html">french</a></li></ul>"""
+        nominalselect="""<ul class="nav navbar-nav navbar-right"><li><a class="btn btn-default" href="index_en.html">english</a></li><li><a  href="index_fr.html">french</a></li></ul>"""
         if dual_select==nominalselect:
             self.addSuccess()
         else:
-            self.addFailure("links malformed (expected {})".format(nominalselect))
+            self.addFailure("links malformed (expected {})".format(nominalselect),nonDestructive=True)
+            self.addFailure("                (got {})".format(dual_select))
 
+        self.currentTest("dual:iframe")
+        if (dual.iframe(["page1.html","page2.html"])!="""<iframe src=page1.html width='50.0%' height='500px'>Iframes not supported</iframe><iframe src=page2.html width='50.0%' height='500px'>Iframes not supported</iframe>"""):
+            self.addFailure("iframes generation incorrect")
+        else:
+            self.addSuccess()
+
+        import os
+        self.currentTest("dual:pathAssets")
+        if os.path.exists(dual.assets()):
+            self.addSuccess()
+        else:
+            self.addFailure()
     def testThisDictOnDis(self,name,testDict,testFunction,returnType=str,returnDict=None):
         res=testFunction(**testDict)
         if returnDict==None:
@@ -329,6 +401,7 @@ testVky=group(name="vkyWeb_all",terminal=term,verbose=1,align=42)
 #testParser time
 
 testParser("file_parser").test()
+testVky.addTest(testImports("imports"))
 testVky.addTest(testParser("file_parser"))
 testVky.addTest(testTree("tree_parser"))
 testVky.addTest(testModel("model"))
