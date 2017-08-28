@@ -1,20 +1,28 @@
 # Copyleft (c) 2016 Cocobug All Rights Reserved.
 # -*- coding: utf_8 -*-
 
-import sys
+import sys,os
 try:
     from blessings import Terminal
 except:
     print ("You need to have blessings installed to run the test")
+    print ("A blessingless version is being worked on")
     sys.exit()
 
 try:
     from minitest import minitest
 except:
     print ("You need to have minitest installed to run the test")
-    print ("the latest version of minitest should have been included with the vkyweb package")
+    print (" the latest version of minitest should have been included with the vkyweb package")
+    print (" you can download it manually at https://github.com/Malphaet/minitest")
     sys.exit()
 import types
+
+try:
+    import markdown
+except:
+    print ("You need markdown installed to parse the files")
+    sys.exit()
 from generator import *
 
 term=Terminal()
@@ -355,12 +363,11 @@ class testDual(simple):
             self.addFailure("                (got {})".format(dual_select))
 
         self.currentTest("dual:iframe")
-        if (dual.iframe(["page1.html","page2.html"])!="""<iframe src=page1.html width='50.0%' height='500px'>Iframes not supported</iframe><iframe src=page2.html width='50.0%' height='500px'>Iframes not supported</iframe>"""):
-            self.addFailure("iframes generation incorrect")
+        if (dual.iframe(["page1.html","page2.html"])!="""<iframe src=page1.html width='50.0%' height='100%' frameborder='0'>Iframes not supported</iframe><iframe src=page2.html width='50.0%' height='100%' frameborder='0'>Iframes not supported</iframe>"""):
+            self.addFailure("iframes generation incorrect (got {})".format(dual.iframe(["page1.html","page2.html"])))
         else:
             self.addSuccess()
 
-        impoe
         self.currentTest("dual:pathAssets")
         if os.path.exists(dual.assets()):
             self.addSuccess()
