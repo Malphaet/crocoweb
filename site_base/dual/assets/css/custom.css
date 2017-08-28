@@ -24,6 +24,7 @@ body {
 #page-wrapper {
     padding: 15px 15px;
     min-height: 600px;
+    height: 600px;
     background:#F3F3F3;
 
 }
@@ -32,7 +33,7 @@ body {
     margin:10px 20px 10px 0px;
     background-color:#fff!important;
     padding:10px;
-    min-height:1200px;
+    min-height:100%;
 }
 
 .text-center {
@@ -108,7 +109,7 @@ color:#0000FF;
 }
 .nav-second-level  > li:last-child > a:after,
 .nav-third-level  > li:last-child > a:after {
-	height:50%;
+	height:100%;
 }
 .nav-third-level > li > a:after,
 .nav-third-level > li > a:before  {
@@ -224,7 +225,7 @@ border-radius: 0px;
      #page-wrapper{
                margin: 0 0 0 260px;
         padding: 15px 30px;
-        min-height: 1200px;
+        min-height: 100%;
 
     }
 
