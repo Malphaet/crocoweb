@@ -363,7 +363,7 @@ class testDual(simple):
             self.addFailure("                (got {})".format(dual_select))
 
         self.currentTest("dual:iframe")
-        if (dual.iframe(["page1.html","page2.html"])!="""<iframe src=page1.html width='50.0%' height='100%' frameborder='0'>Iframes not supported</iframe><iframe src=page2.html width='50.0%' height='100%' frameborder='0'>Iframes not supported</iframe>"""):
+        if (dual.iframe(["page1.html","page2.html"])!="""<iframe src=page1.html width='50.0%' id='a92a4d23fa8021c72774d45b474fbe034fd714cb21e422c499eb7f54' onload='setIframeHeight(this.id);' style="height='600px'" frameborder='0'>Iframes not supported</iframe><iframe src=page2.html width='50.0%' id='2eb2decff6c3e2f20da50e42064669b085057f981e316be8c1890afb' onload='setIframeHeight(this.id);' style="height='600px'" frameborder='0'>Iframes not supported</iframe>"""):
             self.addFailure("iframes generation incorrect (got {})".format(dual.iframe(["page1.html","page2.html"])))
         else:
             self.addSuccess()
