@@ -5,9 +5,26 @@ import sys,os
 try:
     from blessings import Terminal
 except:
-    print ("You need to have blessings installed to run the test")
-    print ("A blessingless version is being worked on")
-    sys.exit()
+    print ("Usage of blessings is recomended to run the test")
+    class Nope(object):
+        def __init__(self,*args,**kwargs):
+            pass
+        def __getattribute__(self,attr):
+            return Nope()
+        def __str__(self):
+            return ""
+        def __call__(self,*args,**kargs):
+            return "".join(args)
+        def __repr__(self):
+            return ""
+
+    class T(object):
+        def __init__(self,*args,**kwargs):
+            pass
+        def __getattribute__(self,attr):
+            return Nope()
+    Terminal=T
+    #sys.exit()
 
 try:
     from minitest import minitest
