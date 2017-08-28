@@ -1,9 +1,29 @@
 # -*- coding: utf_8 -*-
 
-import os
+import os,hashlib
 
 def container(pagetitle="#_pagetitle_#",websitename="#_websitename_#",menu="\{menu\}",page="\{page\}",langswitch="\{langswitch\}",depth=""):
     "Return the global appearance of the website"
+    script="""<script>
+        function setIframeHeight(id) {
+            var ifrm = document.getElementById(id);
+            var doc = ifrm.contentDocument? ifrm.contentDocument: ifrm.contentWindow.document;
+            ifrm.style.visibility = 'hidden';
+            ifrm.style.height = "10px"; // reset to minimal height ...
+            // IE opt. for bing/msn needs a bit added or scrollbar appears
+            ifrm.style.height =  getDocHeight( doc ) + 42 + "px";
+            ifrm.style.visibility = 'visible';
+            ifrm.style.verticalAlign='top';
+        }
+        function getDocHeight(doc) {
+            doc = doc || document;
+            // stackoverflow.com/questions/1145850/
+            var body = doc.body, html = doc.documentElement;
+            var height = Math.max( body.scrollHeight, body.offsetHeight,
+            html.clientHeight, html.scrollHeight, html.offsetHeight );
+            return height;
+        }
+    </script>"""
     return """<!DOCTYPE html>
     <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -18,6 +38,7 @@ def container(pagetitle="#_pagetitle_#",websitename="#_websitename_#",menu="\{me
         <link href="{depth}assets/css/custom.css" rel="stylesheet" />
         <!-- GOOGLE FONTS-->
         <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+        {script}
     </head>
     <body>
         <div id="wrapper">
@@ -61,7 +82,7 @@ def container(pagetitle="#_pagetitle_#",websitename="#_websitename_#",menu="\{me
     <!-- CUSTOM SCRIPTS -->
     <script src="{depth}assets/js/custom.js"></script>
     </body>
-    </html>""".format(MENU=menu,PAGE=page,websitename=websitename,pagetitle=pagetitle,depth=depth,langs="",langswitch=langswitch)
+    </html>""".format(MENU=menu,PAGE=page,websitename=websitename,pagetitle=pagetitle,depth=depth,langs="",langswitch=langswitch,script=script)
 
 
 def menu(previous="",menulist="\{menulist\}",articles="#_articles_#",depth=""):
@@ -91,14 +112,14 @@ def content(content="\{content\}",title="\{title\}"):
                 {content}
             </div>
         </div>
-        <hr />
     </div></body>""".format(content=content,title=title)
 
 def iframe(list_of_pages):
     iframes=""
     percent=round(100/len(list_of_pages))
     for page in list_of_pages:
-        iframes+="<iframe src={} width='{}%' height='100%' frameborder='0'>Iframes not supported</iframe>".format(page,percent)
+        pageid=hashlib.sha224(page).hexdigest()
+        iframes+="""<iframe src={} width='{}%' id='{}' onload='setIframeHeight(this.id);' style="height='600px'" frameborder='0'>Iframes not supported</iframe>""".format(page,percent,pageid)
     return iframes
 
 def assets():
